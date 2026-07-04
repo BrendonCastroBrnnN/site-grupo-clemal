@@ -22,3 +22,12 @@ export interface Category {
   createdAt?: string;
   updatedAt?: string;
 }
+
+export interface ProductFormData {
+  name: string;
+  categorySlug: string;
+  description: string;
+  images: File[];
+  features: string[];
+  isActive: boolean;
+}
