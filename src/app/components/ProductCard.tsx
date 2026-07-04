@@ -1,5 +1,5 @@
 import { MessageCircle, ArrowRight, Star } from "lucide-react";
-import { Product } from "../data/products";
+import type { Product } from "../types/product";
 
 interface ProductCardProps {
   product: Product;

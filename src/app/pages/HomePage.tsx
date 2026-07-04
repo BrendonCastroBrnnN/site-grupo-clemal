@@ -4,7 +4,9 @@ import {
   Package, Users, Factory, Layers, Wrench, Zap,
   Shield, Truck, Plus, Minus, Star
 } from "lucide-react";
-import { categories, testimonials, clientLogos } from "../data/products";
+const categories: any[] = [];
+const testimonials: any[] = [];
+const clientLogos: any[] = [];
 
 interface HomePageProps {
   onNavigate: (page: string, params?: Record<string, string>) => void;

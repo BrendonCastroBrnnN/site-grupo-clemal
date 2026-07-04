@@ -3,7 +3,9 @@ import {
   MessageCircle, Star, ChevronRight, CheckCircle,
   Share2, ZoomIn, Package, ArrowLeft, Award, Truck, Shield
 } from "lucide-react";
-import { products } from "../data/products";
+import type { Product } from "../types/product";
+
+const products: Product[] = [];
 import { ProductCard } from "../components/ProductCard";
 
 interface ProductDetailProps {

@@ -1,6 +1,9 @@
 import { useState, useMemo } from "react";
 import { MessageCircle, Search, ChevronRight } from "lucide-react";
-import { products, categories } from "../data/products";
+import type { Product } from "../types/product";
+
+const products: Product[] = [];
+const categories: any[] = [];
 import { ProductCard } from "../components/ProductCard";
 
 interface ProductsPageProps {
