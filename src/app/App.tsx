@@ -10,6 +10,7 @@ import { AboutPage } from "./pages/AboutPage";
 import { CustomPage } from "./pages/CustomPage";
 import { LicitacoesPage } from "./pages/LicitacoesPage";
 import { MessageCircle } from "lucide-react";
+import { AdminPage } from "./pages/AdminPage";
 
 interface NavState {
   page: string;
@@ -34,7 +35,6 @@ export default function App() {
           <ProductsPage
             onNavigate={navigate}
             initialCategory={nav.params?.category}
-            initialSearch={nav.params?.search}
           />
         );
 
@@ -52,6 +52,8 @@ export default function App() {
 
       case "contact":
         return <ContactPage />;
+      case "admin":
+        return <AdminPage onNavigate={navigate} />;
 
       default:
         return (
