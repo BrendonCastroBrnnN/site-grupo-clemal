@@ -3,14 +3,22 @@ export interface Product {
   name: string;
   slug: string;
   category: string;
-  categorySlug?: string;
+  categorySlug: string;
   description: string;
   images: string[];
   features: string[];
-  sku?: string;
   isActive: boolean;
-  isNew?: boolean;
-  isFeatured?: boolean;
-  rating?: number;
-  reviewCount?: number;
+  createdAt?: string;
+  updatedAt?: string;
+}
+
+export interface Category {
+  id: string;
+  name: string;
+  slug: string;
+  description?: string;
+  isActive: boolean;
+  order?: number;
+  createdAt?: string;
+  updatedAt?: string;
 }
