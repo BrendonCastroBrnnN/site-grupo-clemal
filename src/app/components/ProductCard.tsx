@@ -61,11 +61,11 @@ export function ProductCard({ product, onNavigate }: ProductCardProps) {
         <div className="flex items-center gap-1.5 mb-4">
           <div className="flex gap-0.5">
             {[1, 2, 3, 4, 5].map(s => (
-              <Star key={s} className={`w-3 h-3 ${s <= Math.round(product.rating) ? "text-amber-400 fill-amber-400" : "text-gray-200 fill-gray-200"}`} />
+              <Star key={s} className={`w-3 h-3 ${s <= Math.round(product.rating ?? 0) ? "text-amber-400 fill-amber-400" : "text-gray-200 fill-gray-200"}`} />
             ))}
           </div>
           <span className="text-xs text-gray-400" style={{ fontFamily: "'Inter', sans-serif" }}>
-            ({product.reviewCount} avaliações)
+            ({product.reviewCount ?? 0} avaliações)
           </span>
         </div>
 

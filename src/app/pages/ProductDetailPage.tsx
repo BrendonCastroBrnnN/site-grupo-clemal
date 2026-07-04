@@ -31,7 +31,7 @@ export function ProductDetailPage({ slug, onNavigate }: ProductDetailProps) {
             Início
           </button>
           <ChevronRight className="w-3 h-3" />
-          <button onClick={() => onNavigate("products", { category: product.categorySlug })} className="hover:text-gray-700 transition-colors">
+          <button onClick={() => onNavigate("products", { category: product.categorySlug ?? "" })} className="hover:text-gray-700 transition-colors">
             {product.category}
           </button>
           <ChevronRight className="w-3 h-3" />
@@ -42,7 +42,7 @@ export function ProductDetailPage({ slug, onNavigate }: ProductDetailProps) {
       <div className="max-w-7xl mx-auto px-6 py-10">
         {/* Back link */}
         <button
-          onClick={() => onNavigate("products", { category: product.categorySlug })}
+          onClick={() => onNavigate("products", { category: product.categorySlug ?? "" })}
           className="flex items-center gap-1.5 text-sm text-gray-500 hover:text-gray-900 mb-8 transition-colors"
         >
           <ArrowLeft className="w-4 h-4" />
@@ -116,7 +116,7 @@ export function ProductDetailPage({ slug, onNavigate }: ProductDetailProps) {
               <div className="flex items-center gap-1.5">
                 <div className="flex gap-0.5">
                   {[1,2,3,4,5].map(s => (
-                    <Star key={s} className={`w-3.5 h-3.5 ${s <= Math.round(product.rating) ? "text-amber-400 fill-amber-400" : "text-gray-200 fill-gray-200"}`} />
+                    <Star key={s} className={`w-3.5 h-3.5 ${s <= Math.round(product.rating ?? 0) ? "text-amber-400 fill-amber-400" : "text-gray-200 fill-gray-200"}`} />
                   ))}
                 </div>
                 <span className="text-sm font-semibold text-gray-700">{product.rating}</span>

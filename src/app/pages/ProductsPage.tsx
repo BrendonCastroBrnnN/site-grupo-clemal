@@ -30,7 +30,7 @@ export function ProductsPage({ onNavigate, initialCategory, initialSearch }: Pro
     );
     switch (sortBy) {
       case "az": return r.sort((a, b) => a.name.localeCompare(b.name));
-      case "rating": return r.sort((a, b) => b.rating - a.rating);
+      case "rating": return r.sort((a, b) => (b.rating ?? 0) - (a.rating ?? 0));
       default: return r.sort((a, b) => (b.isFeatured ? 1 : 0) - (a.isFeatured ? 1 : 0));
     }
   }, [selectedCategory, search, sortBy]);

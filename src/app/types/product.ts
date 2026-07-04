@@ -6,9 +6,11 @@ export interface Product {
   categorySlug?: string;
   description: string;
   images: string[];
-  features?: string[];
+  features: string[];
   sku?: string;
   isActive: boolean;
   isNew?: boolean;
   isFeatured?: boolean;
+  rating?: number;
+  reviewCount?: number;
 }
