@@ -1,27 +1,19 @@
 import { Search, PackageOpen } from "lucide-react";
 import { useMemo, useState } from "react";
 import { ProductCard } from "../components/ProductCard";
-import type { Product } from "../types/product";
+import { getCategories, getProducts } from "../services/productsService";
 
 interface ProductsPageProps {
   onNavigate: (page: string, params?: Record<string, string>) => void;
   initialCategory?: string;
 }
 
-interface Category {
-  id: string;
-  name: string;
-  slug: string;
-  description?: string;
-}
-
-const categories: Category[] = [];
-
-const products: Product[] = [];
-
 export function ProductsPage({ onNavigate, initialCategory }: ProductsPageProps) {
   const [selectedCategory, setSelectedCategory] = useState(initialCategory || "all");
   const [searchTerm, setSearchTerm] = useState("");
+
+  const categories = getCategories();
+  const products = getProducts();
 
   const filteredProducts = useMemo(() => {
     return products.filter((product) => {
@@ -82,11 +74,10 @@ export function ProductsPage({ onNavigate, initialCategory }: ProductsPageProps)
               <div className="space-y-2">
                 <button
                   onClick={() => setSelectedCategory("all")}
-                  className={`w-full text-left px-4 py-3 rounded-xl text-sm font-semibold transition-colors ${
-                    selectedCategory === "all"
+                  className={`w-full text-left px-4 py-3 rounded-xl text-sm font-semibold transition-colors ${selectedCategory === "all"
                       ? "bg-[#111111] text-white"
                       : "bg-white text-gray-600 hover:text-gray-900 border border-gray-100"
-                  }`}
+                    }`}
                 >
                   Todos os produtos
                 </button>
@@ -96,11 +87,10 @@ export function ProductsPage({ onNavigate, initialCategory }: ProductsPageProps)
                     <button
                       key={category.id}
                       onClick={() => setSelectedCategory(category.slug)}
-                      className={`w-full text-left px-4 py-3 rounded-xl text-sm font-semibold transition-colors ${
-                        selectedCategory === category.slug
+                      className={`w-full text-left px-4 py-3 rounded-xl text-sm font-semibold transition-colors ${selectedCategory === category.slug
                           ? "bg-[#111111] text-white"
                           : "bg-white text-gray-600 hover:text-gray-900 border border-gray-100"
-                      }`}
+                        }`}
                     >
                       {category.name}
                     </button>

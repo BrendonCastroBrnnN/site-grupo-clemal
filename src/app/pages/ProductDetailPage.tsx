@@ -1,16 +1,14 @@
 import { ArrowLeft, CheckCircle, MessageCircle, PackageOpen } from "lucide-react";
 import { ProductCard } from "../components/ProductCard";
-import type { Product } from "../types/product";
+import { getProductBySlug, getRelatedProducts } from "../services/productsService";
 
 interface ProductDetailProps {
   slug: string;
   onNavigate: (page: string, params?: Record<string, string>) => void;
 }
 
-const products: Product[] = [];
-
 export function ProductDetailPage({ slug, onNavigate }: ProductDetailProps) {
-  const product = products.find((item) => item.slug === slug);
+  const product = getProductBySlug(slug);
 
   if (!product) {
     return (
@@ -42,9 +40,7 @@ export function ProductDetailPage({ slug, onNavigate }: ProductDetailProps) {
 
   const coverImage = product.images?.[0];
 
-  const relatedProducts = products
-    .filter((item) => item.categorySlug === product.categorySlug && item.id !== product.id)
-    .slice(0, 4);
+  const relatedProducts = getRelatedProducts(product);
 
   const whatsappText = encodeURIComponent(
     `Olá! Tenho interesse no produto ${product.name}. Gostaria de solicitar mais informações.`
