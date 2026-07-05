@@ -12,7 +12,7 @@ export function ProductCard({ product, onNavigate }: ProductCardProps) {
   return (
     <article className="group bg-white rounded-2xl border border-gray-100 overflow-hidden hover:shadow-lg transition-all duration-300">
       <button
-        onClick={() => onNavigate("product-detail", { slug: product.slug })}
+        onClick={() => onNavigate("product", { slug: product.slug })}
         className="block w-full aspect-[4/3] bg-gray-100 overflow-hidden"
       >
         {image ? (
@@ -42,7 +42,7 @@ export function ProductCard({ product, onNavigate }: ProductCardProps) {
         </p>
 
         <button
-          onClick={() => onNavigate("product-detail", { slug: product.slug })}
+          onClick={() => onNavigate("product", { slug: product.slug })}
           className="inline-flex items-center gap-2 text-sm font-semibold text-[#dc2626] hover:text-[#b91c1c] transition-colors"
         >
           Ver produto
