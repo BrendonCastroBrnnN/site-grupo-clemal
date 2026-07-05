@@ -1,10 +1,20 @@
+import { useState } from "react";
 import { ProductForm } from "../components/admin/ProductForm";
+import { AdminProductsList } from "../components/admin/AdminProductsList";
+import { getAllProducts } from "../services/productsService";
 
 interface AdminPageProps {
   onNavigate: (page: string, params?: Record<string, string>) => void;
 }
 
 export function AdminPage({ onNavigate }: AdminPageProps) {
+  const [refreshKey, setRefreshKey] = useState(0);
+  const products = getAllProducts();
+
+  function handleProductCreated() {
+    setRefreshKey((current) => current + 1);
+  }
+
   return (
     <main className="min-h-screen bg-[#f6f6f6]" style={{ fontFamily: "'Inter', sans-serif" }}>
       <section className="bg-[#111111] text-white">
@@ -33,7 +43,10 @@ export function AdminPage({ onNavigate }: AdminPageProps) {
       </section>
 
       <section className="max-w-7xl mx-auto px-6 py-10">
-        <ProductForm />
+        <div className="space-y-8" key={refreshKey}>
+          <ProductForm onProductCreated={handleProductCreated} />
+          <AdminProductsList products={products} />
+        </div>
       </section>
     </main>
   );

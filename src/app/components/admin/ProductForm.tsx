@@ -4,6 +4,10 @@ import type { ProductFormData } from "../../types/product";
 import { getCategories } from "../../services/categoriesService";
 import { createProduct } from "../../services/productsService";
 
+interface ProductFormProps {
+  onProductCreated?: () => void;
+}
+
 const initialFormData: ProductFormData = {
     name: "",
     categorySlug: "",
@@ -13,7 +17,7 @@ const initialFormData: ProductFormData = {
     isActive: true,
 };
 
-export function ProductForm() {
+export function ProductForm({ onProductCreated }: ProductFormProps) {
     const [formData, setFormData] = useState<ProductFormData>(initialFormData);
     const [featureText, setFeatureText] = useState("");
     const categories = getCategories();
@@ -81,6 +85,7 @@ export function ProductForm() {
 
         setFormData(initialFormData);
         setFeatureText("");
+        onProductCreated?.();
     }
 
     return (
