@@ -2,6 +2,7 @@ import { ImagePlus, PackagePlus, Save } from "lucide-react";
 import { useState } from "react";
 import type { ProductFormData } from "../../types/product";
 import { getCategories } from "../../services/categoriesService";
+import { createProduct } from "../../services/productsService";
 
 const initialFormData: ProductFormData = {
     name: "",
@@ -59,8 +60,13 @@ export function ProductForm() {
     function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
         event.preventDefault();
 
-        console.log("Produto pronto para cadastro:", formData);
-        alert("Estrutura do formulário pronta. A integração com banco será feita depois.");
+        const product = createProduct(formData);
+
+        console.log("Produto cadastrado em memória:", product);
+        alert("Produto cadastrado temporariamente. Depois será salvo no banco de dados.");
+
+        setFormData(initialFormData);
+        setFeatureText("");
     }
 
     return (
