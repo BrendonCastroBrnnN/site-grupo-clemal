@@ -60,7 +60,7 @@ export function createProduct(data: ProductFormData): Product {
     category: data.categorySlug,
     categorySlug: data.categorySlug,
     description: data.description,
-    images: [],
+    images: data.images,
     features: data.features,
     isActive: data.isActive,
     createdAt: new Date().toISOString(),

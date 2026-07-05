@@ -27,7 +27,7 @@ export interface ProductFormData {
   name: string;
   categorySlug: string;
   description: string;
-  images: File[];
+  images: string[];
   features: string[];
   isActive: boolean;
 }

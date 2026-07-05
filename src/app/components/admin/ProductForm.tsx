@@ -31,10 +31,24 @@ export function ProductForm() {
     function handleImagesChange(event: React.ChangeEvent<HTMLInputElement>) {
         const files = Array.from(event.target.files || []);
 
-        setFormData((current) => ({
-            ...current,
-            images: files,
-        }));
+        Promise.all(
+            files.map(
+                (file) =>
+                    new Promise<string>((resolve, reject) => {
+                        const reader = new FileReader();
+
+                        reader.onload = () => resolve(String(reader.result));
+                        reader.onerror = reject;
+
+                        reader.readAsDataURL(file);
+                    })
+            )
+        ).then((images) => {
+            setFormData((current) => ({
+                ...current,
+                images,
+            }));
+        });
     }
 
     function handleAddFeature() {
@@ -216,14 +230,20 @@ export function ProductForm() {
 
                     {formData.images.length > 0 && (
                         <div className="mt-4 space-y-2">
-                            {formData.images.map((file) => (
-                                <div
-                                    key={file.name}
-                                    className="text-xs text-gray-500 bg-[#fafafa] border border-gray-100 rounded-xl px-3 py-2"
-                                >
-                                    {file.name}
-                                </div>
-                            ))}
+                            <div className="grid grid-cols-2 gap-3 mt-4">
+                                {formData.images.map((image, index) => (
+                                    <div
+                                        key={`${image}-${index}`}
+                                        className="aspect-square rounded-xl overflow-hidden bg-[#fafafa] border border-gray-100"
+                                    >
+                                        <img
+                                            src={image}
+                                            alt={`Imagem selecionada ${index + 1}`}
+                                            className="w-full h-full object-cover"
+                                        />
+                                    </div>
+                                ))}
+                            </div>
                         </div>
                     )}
                 </div>
