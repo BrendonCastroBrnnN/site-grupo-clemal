@@ -1,6 +1,6 @@
 import type { Product, ProductFormData } from "../types/product";
 
-let products: Product[] = [];
+const STORAGE_KEY = "grupo-clemal-products";
 
 function generateSlug(value: string): string {
   return value
@@ -12,8 +12,28 @@ function generateSlug(value: string): string {
     .replace(/\s+/g, "-");
 }
 
+function loadProducts(): Product[] {
+  const stored = localStorage.getItem(STORAGE_KEY);
+
+  if (!stored) return [];
+
+  try {
+    return JSON.parse(stored) as Product[];
+  } catch {
+    return [];
+  }
+}
+
+function saveProducts(products: Product[]) {
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(products));
+}
+
 export function getProducts(): Product[] {
-  return products.filter((product) => product.isActive);
+  return loadProducts().filter((product) => product.isActive);
+}
+
+export function getAllProducts(): Product[] {
+  return loadProducts();
 }
 
 export function getProductBySlug(slug: string): Product | undefined {
@@ -31,6 +51,8 @@ export function getRelatedProducts(product: Product, limit = 4): Product[] {
 }
 
 export function createProduct(data: ProductFormData): Product {
+  const products = loadProducts();
+
   const product: Product = {
     id: crypto.randomUUID(),
     name: data.name,
@@ -44,7 +66,7 @@ export function createProduct(data: ProductFormData): Product {
     createdAt: new Date().toISOString(),
   };
 
-  products = [product, ...products];
+  saveProducts([product, ...products]);
 
   return product;
 }
