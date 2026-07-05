@@ -1,12 +1,6 @@
-import type { Category, Product } from "../types/product";
-
-const categories: Category[] = [];
+import type { Product } from "../types/product";
 
 const products: Product[] = [];
-
-export function getCategories(): Category[] {
-  return categories.filter((category) => category.isActive);
-}
 
 export function getProducts(): Product[] {
   return products.filter((product) => product.isActive);

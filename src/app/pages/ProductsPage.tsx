@@ -1,7 +1,8 @@
 import { Search, PackageOpen } from "lucide-react";
 import { useMemo, useState } from "react";
 import { ProductCard } from "../components/ProductCard";
-import { getCategories, getProducts } from "../services/productsService";
+import { getCategories } from "../services/categoriesService";
+import { getProducts } from "../services/productsService";
 
 interface ProductsPageProps {
   onNavigate: (page: string, params?: Record<string, string>) => void;
