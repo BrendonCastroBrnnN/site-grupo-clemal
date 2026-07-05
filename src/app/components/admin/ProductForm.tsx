@@ -55,6 +55,13 @@ export function ProductForm({ onProductCreated }: ProductFormProps) {
         });
     }
 
+    function handleRemoveImage(index: number) {
+  setFormData((current) => ({
+    ...current,
+    images: current.images.filter((_, imageIndex) => imageIndex !== index),
+  }));
+}
+
     function handleAddFeature() {
         const value = featureText.trim();
 
@@ -233,24 +240,6 @@ export function ProductForm({ onProductCreated }: ProductFormProps) {
                         />
                     </label>
 
-                    {formData.images.length > 0 && (
-                        <div className="mt-4 space-y-2">
-                            <div className="grid grid-cols-2 gap-3 mt-4">
-                                {formData.images.map((image, index) => (
-                                    <div
-                                        key={`${image}-${index}`}
-                                        className="aspect-square rounded-xl overflow-hidden bg-[#fafafa] border border-gray-100"
-                                    >
-                                        <img
-                                            src={image}
-                                            alt={`Imagem selecionada ${index + 1}`}
-                                            className="w-full h-full object-cover"
-                                        />
-                                    </div>
-                                ))}
-                            </div>
-                        </div>
-                    )}
                 </div>
 
                 <div className="bg-white rounded-3xl border border-gray-100 p-6">
