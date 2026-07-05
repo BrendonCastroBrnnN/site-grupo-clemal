@@ -1,6 +1,7 @@
 import { ArrowLeft, CheckCircle, MessageCircle, PackageOpen } from "lucide-react";
 import { ProductCard } from "../components/ProductCard";
 import { getProductBySlug, getRelatedProducts } from "../services/productsService";
+import { useState } from "react";
 
 interface ProductDetailProps {
   slug: string;
@@ -38,7 +39,8 @@ export function ProductDetailPage({ slug, onNavigate }: ProductDetailProps) {
     );
   }
 
-  const coverImage = product.images?.[0];
+  const [activeImageIndex, setActiveImageIndex] = useState(0);
+  const activeImage = product.images[activeImageIndex];
 
   const relatedProducts = getRelatedProducts(product);
 
@@ -84,19 +86,74 @@ export function ProductDetailPage({ slug, onNavigate }: ProductDetailProps) {
 
       <section className="max-w-7xl mx-auto px-6 py-12">
         <div className="grid grid-cols-1 lg:grid-cols-[1.1fr_0.9fr] gap-10">
-          <div className="rounded-3xl overflow-hidden bg-[#fafafa] border border-gray-100 aspect-[4/3]">
-            {coverImage ? (
-              <img
-                src={coverImage}
-                alt={product.name}
-                className="w-full h-full object-cover"
-              />
-            ) : (
-              <div className="w-full h-full flex items-center justify-center text-sm text-gray-400">
-                Produto sem imagem cadastrada
-              </div>
-            )}
-          </div>
+          <div>
+  <div className="relative rounded-3xl overflow-hidden bg-[#fafafa] border border-gray-100 aspect-[4/3]">
+    {activeImage ? (
+      <img
+        src={activeImage}
+        alt={product.name}
+        className="w-full h-full object-cover"
+      />
+    ) : (
+      <div className="w-full h-full flex items-center justify-center text-sm text-gray-400">
+        Produto sem imagem cadastrada
+      </div>
+    )}
+
+    {product.images.length > 1 && (
+      <>
+        <button
+          type="button"
+          onClick={() =>
+            setActiveImageIndex((current) =>
+              current === 0 ? product.images.length - 1 : current - 1
+            )
+          }
+          className="absolute left-4 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full bg-white/90 text-gray-800 shadow flex items-center justify-center hover:bg-white transition-colors text-2xl"
+        >
+          ‹
+        </button>
+
+        <button
+          type="button"
+          onClick={() =>
+            setActiveImageIndex((current) =>
+              current === product.images.length - 1 ? 0 : current + 1
+            )
+          }
+          className="absolute right-4 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full bg-white/90 text-gray-800 shadow flex items-center justify-center hover:bg-white transition-colors text-2xl"
+        >
+          ›
+        </button>
+
+        <div className="absolute bottom-4 left-1/2 -translate-x-1/2 bg-black/60 text-white text-xs px-3 py-1 rounded-full">
+          {activeImageIndex + 1} / {product.images.length}
+        </div>
+      </>
+    )}
+  </div>
+
+  {product.images.length > 1 && (
+    <div className="mt-4 grid grid-cols-4 gap-3">
+      {product.images.map((image, index) => (
+        <button
+          key={`${image}-${index}`}
+          type="button"
+          onClick={() => setActiveImageIndex(index)}
+          className={`aspect-square rounded-xl overflow-hidden border-2 transition-colors ${
+            activeImageIndex === index ? "border-[#dc2626]" : "border-gray-100"
+          }`}
+        >
+          <img
+            src={image}
+            alt={`${product.name} - miniatura ${index + 1}`}
+            className="w-full h-full object-cover"
+          />
+        </button>
+      ))}
+    </div>
+  )}
+</div>
 
           <aside className="lg:sticky lg:top-24 h-fit">
             <div className="rounded-3xl border border-gray-100 bg-[#fafafa] p-7">
@@ -163,23 +220,6 @@ export function ProductDetailPage({ slug, onNavigate }: ProductDetailProps) {
             </div>
           </aside>
         </div>
-
-        {product.images.length > 1 && (
-          <div className="mt-8 grid grid-cols-2 md:grid-cols-4 gap-4">
-            {product.images.slice(1).map((image, index) => (
-              <div
-                key={`${image}-${index}`}
-                className="rounded-2xl overflow-hidden bg-[#fafafa] border border-gray-100 aspect-[4/3]"
-              >
-                <img
-                  src={image}
-                  alt={`${product.name} - imagem ${index + 2}`}
-                  className="w-full h-full object-cover"
-                />
-              </div>
-            ))}
-          </div>
-        )}
 
         {relatedProducts.length > 0 && (
           <div className="mt-14">
