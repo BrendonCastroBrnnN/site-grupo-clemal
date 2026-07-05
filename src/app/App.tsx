@@ -18,7 +18,7 @@ interface NavState {
 }
 
 export default function App() {
-  const [nav, setNav] = useState<NavState>({ page: "home" });
+  const [nav, setNav] = useState<NavState>({ page: "admin" });
 
   const navigate = (page: string, params?: Record<string, string>) => {
     setNav({ page, params });

@@ -106,12 +106,7 @@ export function HomePage({ onNavigate }: HomePageProps) {
 
           {/* Left */}
           <div>
-            <div className="inline-flex items-center gap-2 border text-[#dc2626] text-xs font-semibold tracking-widest uppercase px-3.5 py-1.5 rounded-full mb-7"
-              style={{ background: "rgba(220,38,38,0.06)", borderColor: "rgba(220,38,38,0.2)" }}>
-              <Award className="w-3.5 h-3.5" />
-              Fabricante Nacional · Desde 1998
-            </div>
-
+            
             <h1 style={{
               fontFamily: "'Barlow Condensed', sans-serif",
               fontSize: "clamp(36px,4.5vw,62px)",
