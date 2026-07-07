@@ -4,14 +4,14 @@ export function AboutPage() {
   return (
     <div className="min-h-screen bg-[#11111]">
       {/* Hero */}
-      <div className="bg-gradient-to-r from-[#081848] to-[#0d2461] text-white py-16">
+      <div className="bg-[#111111] text-white py-16">
         <div className="max-w-7xl mx-auto px-4 grid grid-cols-1 md:grid-cols-2 gap-10 items-center">
           <div>
             <p className="text-yellow-400 font-bold uppercase tracking-widest text-sm mb-2">Nossa História</p>
             <h1 className="text-4xl md:text-5xl font-black mb-4" style={{ fontFamily: "'Barlow Condensed', sans-serif", textTransform: "uppercase" }}>
               MAIS DE 26 ANOS FABRICANDO QUALIDADE
             </h1>
-            <p className="text-blue-200 text-lg leading-relaxed">
+            <p className="text-gray-300 text-lg leading-relaxed">
               Fundado em 1998, o Grupo Clemal se consolidou como referência nacional na fabricação de bolsas, malotes, capas protetoras e EPIs para empresas de todos os segmentos.
             </p>
           </div>
@@ -46,12 +46,12 @@ export function AboutPage() {
       <div className="max-w-7xl mx-auto px-4 py-12">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-10 items-start mb-12">
           <div>
-            <h2 className="text-2xl font-black text-[#0d2461] mb-4" style={{ fontFamily: "'Barlow Condensed', sans-serif", textTransform: "uppercase" }}>
+            <h2 className="text-2xl font-black text-[#111111] mb-4" style={{ fontFamily: "'Barlow Condensed', sans-serif", textTransform: "uppercase" }}>
               Quem Somos
             </h2>
             <div className="space-y-4 text-gray-600 leading-relaxed">
               <p>
-                O <strong className="text-[#0d2461]">Grupo Clemal</strong> é uma empresa mineira com sede em Contagem/MG, especializada na fabricação de artigos em couro, nylon, lona e outros materiais técnicos para o mercado corporativo.
+                O <strong className="text-[#111111]">Grupo Clemal</strong> é uma empresa mineira com sede em Contagem/MG, especializada na fabricação de artigos em couro, nylon, lona e outros materiais técnicos para o mercado corporativo.
               </p>
               <p>
                 Com mais de 26 anos de experiência, atendemos empresas dos mais diversos setores: telecomunicações, energia elétrica, logística, serviços de campo, mineração e muito mais.
@@ -72,7 +72,7 @@ export function AboutPage() {
 
         {/* Values */}
         <div className="mb-12">
-          <h2 className="text-2xl font-black text-[#0d2461] mb-6 text-center" style={{ fontFamily: "'Barlow Condensed', sans-serif", textTransform: "uppercase" }}>
+          <h2 className="text-2xl font-black text-[#111111] mb-6 text-center" style={{ fontFamily: "'Barlow Condensed', sans-serif", textTransform: "uppercase" }}>
             Nossos Valores
           </h2>
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
@@ -84,9 +84,9 @@ export function AboutPage() {
             ].map(({ icon: Icon, title, desc }) => (
               <div key={title} className="bg-white rounded-xl border border-gray-100 p-5 text-center hover:shadow-md transition-shadow">
                 <div className="w-12 h-12 bg-[#e8edf7] rounded-full flex items-center justify-center mx-auto mb-3">
-                  <Icon className="w-6 h-6 text-[#0d2461]" />
+                  <Icon className="w-6 h-6 text-[#111111]" />
                 </div>
-                <h3 className="font-bold text-[#0d2461] mb-1">{title}</h3>
+                <h3 className="font-bold text-[#111111] mb-1">{title}</h3>
                 <p className="text-xs text-gray-500">{desc}</p>
               </div>
             ))}
@@ -95,7 +95,7 @@ export function AboutPage() {
 
         {/* Certifications / Differentials */}
         <div className="bg-white rounded-xl border border-gray-100 p-8 mb-8">
-          <h2 className="text-2xl font-black text-[#0d2461] mb-6 text-center" style={{ fontFamily: "'Barlow Condensed', sans-serif", textTransform: "uppercase" }}>
+          <h2 className="text-2xl font-black text-[#111111] mb-6 text-center" style={{ fontFamily: "'Barlow Condensed', sans-serif", textTransform: "uppercase" }}>
             Por Que Somos a Melhor Escolha
           </h2>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
@@ -118,11 +118,11 @@ export function AboutPage() {
         </div>
 
         {/* CTA */}
-        <div className="bg-gradient-to-r from-[#0d2461] to-[#1a3a8f] rounded-xl p-8 text-white text-center">
+        <div className="bg-[#111111] rounded-xl p-8 text-white text-center">
           <h2 className="text-2xl font-black mb-2" style={{ fontFamily: "'Barlow Condensed', sans-serif" }}>
             VAMOS TRABALHAR JUNTOS?
           </h2>
-          <p className="text-blue-200 mb-6">Entre em contato com nossa equipe e descubra como podemos ajudar sua empresa.</p>
+          <p className="text-gray-300 mb-6">Entre em contato com nossa equipe e descubra como podemos ajudar sua empresa.</p>
           <a
             href="https://wa.me/5531975458090?text=Olá! Gostaria de conhecer melhor o Grupo Clemal."
             target="_blank" rel="noopener noreferrer"
