@@ -5,7 +5,7 @@ import { getCategories } from "../../services/categoriesService";
 import { createProduct } from "../../services/productsService";
 
 interface ProductFormProps {
-  onProductCreated?: () => void;
+    onProductCreated?: () => void;
 }
 
 const initialFormData: ProductFormData = {
@@ -56,11 +56,11 @@ export function ProductForm({ onProductCreated }: ProductFormProps) {
     }
 
     function handleRemoveImage(index: number) {
-  setFormData((current) => ({
-    ...current,
-    images: current.images.filter((_, imageIndex) => imageIndex !== index),
-  }));
-}
+        setFormData((current) => ({
+            ...current,
+            images: current.images.filter((_, imageIndex) => imageIndex !== index),
+        }));
+    }
 
     function handleAddFeature() {
         const value = featureText.trim();
@@ -84,6 +84,26 @@ export function ProductForm({ onProductCreated }: ProductFormProps) {
 
     function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
         event.preventDefault();
+
+        if (!formData.name.trim()) {
+            alert("Informe o nome do produto.");
+            return;
+        }
+
+        if (!formData.categorySlug) {
+            alert("Selecione uma categoria.");
+            return;
+        }
+
+        if (!formData.description.trim()) {
+            alert("Informe a descrição do produto.");
+            return;
+        }
+
+        if (formData.images.length === 0) {
+            alert("Adicione pelo menos uma imagem do produto.");
+            return;
+        }
 
         const product = createProduct(formData);
 
