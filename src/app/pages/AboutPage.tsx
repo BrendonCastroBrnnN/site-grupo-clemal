@@ -124,7 +124,7 @@ export function AboutPage() {
           </h2>
           <p className="text-gray-300 mb-6">Entre em contato com nossa equipe e descubra como podemos ajudar sua empresa.</p>
           <a
-            href="https://wa.me/5531975458090?text=Olá! Gostaria de conhecer melhor o Grupo Clemal."
+            href="https://wa.me/5531993270281?text=Olá! Gostaria de conhecer melhor o Grupo Clemal."
             target="_blank" rel="noopener noreferrer"
             className="inline-flex items-center gap-2 bg-green-500 hover:bg-green-600 text-white font-black px-8 py-3.5 rounded-lg transition-colors"
           >

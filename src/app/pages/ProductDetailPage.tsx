@@ -204,7 +204,7 @@ export function ProductDetailPage({ slug, onNavigate }: ProductDetailProps) {
               )}
 
               <a
-                href={`https://wa.me/5531975458090?text=${whatsappText}`}
+                href={`https://wa.me/5531993270281?text=${whatsappText}`}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="w-full inline-flex items-center justify-center gap-2 bg-[#dc2626] hover:bg-[#b91c1c] text-white font-bold py-4 rounded-xl transition-colors"

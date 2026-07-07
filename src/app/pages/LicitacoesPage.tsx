@@ -32,7 +32,7 @@ export function LicitacoesPage({ onNavigate }: LicitacoesPageProps) {
             </p>
             <div className="flex flex-wrap gap-3">
               <a
-                href="https://wa.me/5531975458090?text=Olá! Gostaria de informações sobre fornecimento para licitação."
+                href="https://wa.me/5531993270281?text=Olá! Gostaria de informações sobre fornecimento para licitação."
                 target="_blank"
                 rel="noopener noreferrer"
                 className="flex items-center gap-2 bg-[#dc2626] hover:bg-[#b91c1c] text-white font-bold px-7 py-3.5 rounded-xl transition-colors duration-200"
@@ -327,7 +327,7 @@ export function LicitacoesPage({ onNavigate }: LicitacoesPageProps) {
           </p>
           <div className="flex flex-wrap gap-4 justify-center">
             <a
-              href="https://wa.me/5531975458090?text=Olá! Gostaria de participar de uma cotação ou licitação."
+              href="https://wa.me/5531993270281?text=Olá! Gostaria de participar de uma cotação ou licitação."
               target="_blank"
               rel="noopener noreferrer"
               className="flex items-center gap-2 bg-emerald-500 hover:bg-emerald-600 text-white font-bold px-8 py-4 rounded-xl transition-colors duration-200"
@@ -346,7 +346,7 @@ export function LicitacoesPage({ onNavigate }: LicitacoesPageProps) {
             </a>
           </div>
           <p className="text-gray-600 text-xs mt-6">
-            contato@grupoclemal.com.br · (31) 3395-5190 · (31) 97545-8090
+            contato@grupoclemal.com.br · (31) 3395-5190 · (31) 99327-0281
           </p>
         </div>
       </section>

@@ -87,7 +87,7 @@ export default function App() {
 
       {/* Floating WhatsApp */}
       <a
-        href="https://wa.me/5531975458090?text=Olá! Gostaria de informações sobre os produtos do Grupo Clemal."
+        href="https://wa.me/5531993270281?text=Olá! Gostaria de informações sobre os produtos do Grupo Clemal."
         target="_blank"
         rel="noopener noreferrer"
         className="fixed bottom-6 right-6 z-50 bg-emerald-500 hover:bg-emerald-600 text-white rounded-2xl px-5 py-3.5 flex items-center gap-2.5 transition-all duration-200 hover:scale-105 group"

@@ -36,8 +36,8 @@ export function ContactPage() {
               {
                 icon: MessageCircle,
                 title: "WhatsApp",
-                lines: ["(31) 97545-8090", "Atendimento rápido!"],
-                href: "https://wa.me/5531975458090",
+                lines: ["(31) 99327-0281", "Atendimento rápido!"],
+                href: "https://wa.me/5531993270281",
                 color: "text-green-600",
               },
               {
@@ -121,7 +121,7 @@ export function ContactPage() {
                     <Send className="w-4 h-4" />
                     Enviar Mensagem
                   </button>
-                  <a href="https://wa.me/5531975458090?text=Olá! Gostaria de entrar em contato com o Grupo Clemal."
+                  <a href="https://wa.me/5531993270281?text=Olá! Gostaria de entrar em contato com o Grupo Clemal."
                     target="_blank" rel="noopener noreferrer"
                     className="flex items-center justify-center gap-2 bg-green-500 hover:bg-green-600 text-white font-bold px-5 py-3 rounded-md transition-colors">
                     <MessageCircle className="w-5 h-5" />

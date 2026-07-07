@@ -22,14 +22,14 @@ export function TopBar() {
             contato@grupoclemal.com.br
           </a>
           <a
-            href="https://wa.me/5531975458090"
+            href="https://wa.me/5531993270281"
             target="_blank"
             rel="noopener noreferrer"
             className="flex items-center gap-1.5 text-emerald-400 hover:text-emerald-300 transition-colors duration-200"
             style={{ fontFamily: "'Inter', sans-serif" }}
           >
             <MessageCircle className="w-3 h-3" />
-            (31) 97545-8090
+            (31) 99327-0281
           </a>
         </div>
         <div className="flex items-center gap-5 mx-auto md:mx-0" style={{ fontFamily: "'Inter', sans-serif" }}>

@@ -146,7 +146,7 @@ export function HomePage({ onNavigate }: HomePageProps) {
                 PRODUTOS
               </button>
               <a
-                href="https://wa.me/5531975458090?text=Olá! Gostaria de solicitar um orçamento."
+                href="https://wa.me/5531993270281?text=Olá! Gostaria de solicitar um orçamento."
                 target="_blank"
                 rel="noopener noreferrer"
                 className="flex items-center gap-2 bg-[#dc2626] hover:bg-[#b91c1c] text-white font-bold px-7 py-3.5 rounded-xl transition-colors duration-200 shadow-md"
@@ -391,7 +391,7 @@ export function HomePage({ onNavigate }: HomePageProps) {
                     PROJETOS PERSONALIZADOS
                   </button>
                   <a
-                    href="https://wa.me/5531975458090?text=Olá! Quero um projeto personalizado."
+                    href="https://wa.me/5531993270281?text=Olá! Quero um projeto personalizado."
                     target="_blank"
                     rel="noopener noreferrer"
                     className="flex items-center gap-2 border border-white/20 hover:border-white/40 text-white font-semibold px-7 py-3.5 rounded-xl transition-colors duration-200"
@@ -566,7 +566,7 @@ export function HomePage({ onNavigate }: HomePageProps) {
                   PARTICIPAR DE UMA COTAÇÃO
                 </button>
                 <a
-                  href="https://wa.me/5531975458090?text=Olá! Gostaria de informações sobre fornecimento para licitação."
+                  href="https://wa.me/5531993270281?text=Olá! Gostaria de informações sobre fornecimento para licitação."
                   target="_blank"
                   rel="noopener noreferrer"
                   className="flex items-center gap-2 border border-gray-200 hover:border-gray-400 text-gray-700 font-semibold px-7 py-3.5 rounded-xl transition-colors duration-200"
@@ -609,7 +609,7 @@ export function HomePage({ onNavigate }: HomePageProps) {
               <p className="text-gray-400 text-sm mt-2">Orçamentos, projetos e dúvidas técnicas em minutos.</p>
             </div>
             <a
-              href="https://wa.me/5531975458090?text=Olá! Gostaria de falar com um especialista do Grupo Clemal."
+              href="https://wa.me/5531993270281?text=Olá! Gostaria de falar com um especialista do Grupo Clemal."
               target="_blank"
               rel="noopener noreferrer"
               className="inline-flex items-center gap-2 bg-emerald-500 hover:bg-emerald-600 text-white font-bold px-7 py-3.5 rounded-xl transition-colors duration-200 mt-7 self-start"

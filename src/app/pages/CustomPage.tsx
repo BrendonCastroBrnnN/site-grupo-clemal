@@ -158,7 +158,7 @@ export function CustomPage() {
                       <Send className="w-4 h-4" />
                       Enviar Solicitação
                     </button>
-                    <a href="https://wa.me/5531975458090?text=Olá! Gostaria de solicitar um projeto personalizado."
+                    <a href="https://wa.me/5531993270281?text=Olá! Gostaria de solicitar um projeto personalizado."
                       target="_blank" rel="noopener noreferrer"
                       className="flex items-center justify-center gap-2 bg-green-500 hover:bg-green-600 text-white font-bold px-4 py-3 rounded-md transition-colors">
                       <MessageCircle className="w-5 h-5" />

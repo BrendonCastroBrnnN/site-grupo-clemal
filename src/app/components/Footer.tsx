@@ -40,7 +40,7 @@ export function Footer({ onNavigate }: FooterProps) {
                 },
                 {
                   icon: MessageCircle,
-                  href: "https://wa.me/5531975458090",
+                  href: "https://wa.me/5531993270281",
                   label: "WhatsApp",
                   green: true,
                 },
@@ -172,14 +172,14 @@ export function Footer({ onNavigate }: FooterProps) {
                 (31) 3395-5190
               </a>
               <a
-                href="https://wa.me/5531975458090"
+                href="https://wa.me/5531993270281"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="flex items-center gap-3 text-sm text-emerald-400 hover:text-emerald-300 transition-colors duration-150"
                 style={{ fontFamily: "'Inter', sans-serif" }}
               >
                 <MessageCircle className="w-4 h-4 flex-shrink-0" />
-                (31) 97545-8090
+                (31) 99327-0281
               </a>
               <a
                 href="mailto:contato@grupoclemal.com.br"

@@ -117,7 +117,7 @@ export function Header({ onNavigate, currentPage }: HeaderProps) {
 
           {/* CTA principal desktop */}
           <a
-            href="https://wa.me/5531975458090?text=Olá! Gostaria de solicitar um orçamento."
+            href="https://wa.me/5531993270281?text=Olá! Gostaria de solicitar um orçamento."
             target="_blank"
             rel="noopener noreferrer"
             className="hidden lg:flex items-center gap-2 bg-[#dc2626] hover:bg-[#b91c1c] text-white font-bold px-5 py-2.5 rounded-xl transition-colors duration-200 ml-2"
@@ -170,7 +170,7 @@ export function Header({ onNavigate, currentPage }: HeaderProps) {
             ))}
             <div className="pt-2">
               <a
-                href="https://wa.me/5531975458090?text=Olá! Gostaria de solicitar um orçamento."
+                href="https://wa.me/5531993270281?text=Olá! Gostaria de solicitar um orçamento."
                 target="_blank"
                 rel="noopener noreferrer"
                 className="w-full flex items-center justify-center bg-[#dc2626] text-white font-bold py-3.5 rounded-xl text-sm"
