@@ -105,3 +105,27 @@ export function createCategory(name: string, description: string): Category {
 
   return category;
 }
+
+export function deleteCategory(categoryId: string): void {
+  const categories = loadCategories();
+
+  const updatedCategories = categories.filter((category) => category.id !== categoryId);
+
+  saveCategories(updatedCategories);
+}
+
+export function toggleCategoryStatus(categoryId: string): void {
+  const categories = loadCategories();
+
+  const updatedCategories = categories.map((category) =>
+    category.id === categoryId
+      ? {
+          ...category,
+          isActive: !category.isActive,
+          updatedAt: new Date().toISOString(),
+        }
+      : category
+  );
+
+  saveCategories(updatedCategories);
+}
