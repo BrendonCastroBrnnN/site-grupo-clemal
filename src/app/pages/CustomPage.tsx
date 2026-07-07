@@ -21,7 +21,7 @@ export function CustomPage() {
   ];
 
   return (
-    <div className="min-h-screen bg-[#f4f6fb]">
+    <div className="min-h-screen bg-[#11111]">
       {/* Hero */}
       <div className="bg-gradient-to-r from-[#081848] to-[#0d2461] text-white py-14">
         <div className="max-w-7xl mx-auto px-4 text-center">

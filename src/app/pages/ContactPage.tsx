@@ -11,7 +11,7 @@ export function ContactPage() {
   };
 
   return (
-    <div className="min-h-screen bg-[#f4f6fb]">
+    <div className="min-h-screen bg-[#11111]">
       <div className="bg-gradient-to-r from-[#081848] to-[#0d2461] text-white py-10">
         <div className="max-w-7xl mx-auto px-4 text-center">
           <h1 className="text-4xl font-black mb-2" style={{ fontFamily: "'Barlow Condensed', sans-serif", textTransform: "uppercase" }}>

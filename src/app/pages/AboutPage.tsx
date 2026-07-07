@@ -2,7 +2,7 @@ import { Award, Users, Wrench, Truck, CheckCircle, MessageCircle } from "lucide-
 
 export function AboutPage() {
   return (
-    <div className="min-h-screen bg-[#f4f6fb]">
+    <div className="min-h-screen bg-[#11111]">
       {/* Hero */}
       <div className="bg-gradient-to-r from-[#081848] to-[#0d2461] text-white py-16">
         <div className="max-w-7xl mx-auto px-4 grid grid-cols-1 md:grid-cols-2 gap-10 items-center">
