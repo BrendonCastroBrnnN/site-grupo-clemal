@@ -1,5 +1,5 @@
 import { ImagePlus, PackagePlus, Save } from "lucide-react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import type { Product, ProductFormData } from "../../types/product";
 import { getCategories } from "../../services/categoriesService";
 import { createProduct, updateProduct } from "../../services/productsService";
@@ -39,6 +39,23 @@ export function ProductForm({
     );
     const [featureText, setFeatureText] = useState("");
     const categories = getCategories();
+
+    useEffect(() => {
+        if (productToEdit) {
+            setFormData({
+                name: productToEdit.name,
+                categorySlug: productToEdit.categorySlug,
+                description: productToEdit.description,
+                images: productToEdit.images,
+                features: productToEdit.features,
+                isActive: productToEdit.isActive,
+            });
+        } else {
+            setFormData(initialFormData);
+        }
+
+        setFeatureText("");
+    }, [productToEdit]);
 
     function handleChange(
         field: keyof Omit<ProductFormData, "images" | "features">,
@@ -127,20 +144,20 @@ export function ProductForm({
         }
 
         if (productToEdit) {
-    const product = updateProduct(productToEdit.id, formData);
+            const product = updateProduct(productToEdit.id, formData);
 
-    console.log("Produto atualizado em memória:", product);
-    alert("Produto atualizado temporariamente. Depois será salvo no banco de dados.");
-} else {
-    const product = createProduct(formData);
+            console.log("Produto atualizado em memória:", product);
+            alert("Produto atualizado temporariamente. Depois será salvo no banco de dados.");
+        } else {
+            const product = createProduct(formData);
 
-    console.log("Produto cadastrado em memória:", product);
-    alert("Produto cadastrado temporariamente. Depois será salvo no banco de dados.");
-}
+            console.log("Produto cadastrado em memória:", product);
+            alert("Produto cadastrado temporariamente. Depois será salvo no banco de dados.");
+        }
 
-setFormData(initialFormData);
-setFeatureText("");
-onProductSaved?.();
+        setFormData(initialFormData);
+        setFeatureText("");
+        onProductSaved?.();
     }
 
     return (
@@ -337,14 +354,14 @@ onProductSaved?.();
                         {productToEdit ? "Atualizar produto" : "Salvar produto"}
                     </button>
                     {productToEdit && (
-    <button
-        type="button"
-        onClick={onCancelEdit}
-        className="w-full mb-3 inline-flex items-center justify-center gap-2 border border-gray-200 text-gray-700 font-semibold py-3 rounded-xl hover:border-gray-400 transition-colors"
-    >
-        Cancelar edição
-    </button>
-)}
+                        <button
+                            type="button"
+                            onClick={onCancelEdit}
+                            className="w-full mb-3 inline-flex items-center justify-center gap-2 border border-gray-200 text-gray-700 font-semibold py-3 rounded-xl hover:border-gray-400 transition-colors"
+                        >
+                            Cancelar edição
+                        </button>
+                    )}
                 </div>
             </aside>
         </form>
