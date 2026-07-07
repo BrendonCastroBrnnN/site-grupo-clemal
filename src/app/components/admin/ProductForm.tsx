@@ -32,27 +32,30 @@ export function ProductForm({ onProductCreated }: ProductFormProps) {
         }));
     }
 
-    function handleImagesChange(event: React.ChangeEvent<HTMLInputElement>) {
+    async function handleImagesChange(event: React.ChangeEvent<HTMLInputElement>) {
         const files = Array.from(event.target.files || []);
 
-        Promise.all(
-            files.map(
-                (file) =>
-                    new Promise<string>((resolve, reject) => {
-                        const reader = new FileReader();
+        if (files.length === 0) return;
 
-                        reader.onload = () => resolve(String(reader.result));
-                        reader.onerror = reject;
+        const images = await Promise.all(
+            files.map((file) => {
+                return new Promise<string>((resolve, reject) => {
+                    const reader = new FileReader();
 
-                        reader.readAsDataURL(file);
-                    })
-            )
-        ).then((images) => {
-            setFormData((current) => ({
-                ...current,
-                images,
-            }));
-        });
+                    reader.onloadend = () => resolve(reader.result as string);
+                    reader.onerror = reject;
+
+                    reader.readAsDataURL(file);
+                });
+            })
+        );
+
+        setFormData((current) => ({
+            ...current,
+            images: [...current.images, ...images],
+        }));
+
+        event.target.value = "";
     }
 
     function handleRemoveImage(index: number) {
@@ -259,6 +262,37 @@ export function ProductForm({ onProductCreated }: ProductFormProps) {
                             className="hidden"
                         />
                     </label>
+
+                    {formData.images.length > 0 && (
+                        <div className="grid grid-cols-2 gap-3 mt-4">
+                            {formData.images.map((image, index) => (
+                                <div
+                                    key={`${image}-${index}`}
+                                    className="relative aspect-square rounded-xl overflow-hidden bg-[#fafafa] border border-gray-100"
+                                >
+                                    <img
+                                        src={image}
+                                        alt={`Imagem selecionada ${index + 1}`}
+                                        className="w-full h-full object-cover"
+                                    />
+
+                                    {index === 0 && (
+                                        <span className="absolute top-2 left-2 bg-[#dc2626] text-white text-[10px] font-bold px-2 py-1 rounded-full">
+                                            CAPA
+                                        </span>
+                                    )}
+
+                                    <button
+                                        type="button"
+                                        onClick={() => handleRemoveImage(index)}
+                                        className="absolute top-2 right-2 w-7 h-7 rounded-full bg-black/70 text-white text-xs flex items-center justify-center hover:bg-black transition-colors"
+                                    >
+                                        ×
+                                    </button>
+                                </div>
+                            ))}
+                        </div>
+                    )}
 
                 </div>
 
