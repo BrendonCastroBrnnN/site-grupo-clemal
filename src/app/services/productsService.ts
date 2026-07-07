@@ -70,3 +70,27 @@ export function createProduct(data: ProductFormData): Product {
 
   return product;
 }
+
+export function deleteProduct(productId: string): void {
+  const products = loadProducts();
+
+  const updatedProducts = products.filter((product) => product.id !== productId);
+
+  saveProducts(updatedProducts);
+}
+
+export function toggleProductStatus(productId: string): void {
+  const products = loadProducts();
+
+  const updatedProducts = products.map((product) =>
+    product.id === productId
+      ? {
+          ...product,
+          isActive: !product.isActive,
+          updatedAt: new Date().toISOString(),
+        }
+      : product
+  );
+
+  saveProducts(updatedProducts);
+}
