@@ -1,6 +1,7 @@
 import type { Product, ProductFormData } from "../types/product";
 import { getCategoryBySlug } from "./categoriesService";
 
+
 const STORAGE_KEY = "grupo-clemal-products";
 
 function generateSlug(value: string): string {
@@ -96,4 +97,34 @@ export function toggleProductStatus(productId: string): void {
     );
 
     saveProducts(updatedProducts);
+}
+
+export function updateProduct(productId: string, data: ProductFormData): Product | undefined {
+  const products = loadProducts();
+  const existingProduct = products.find((product) => product.id === productId);
+
+  if (!existingProduct) return undefined;
+
+  const category = getCategoryBySlug(data.categorySlug);
+
+  const updatedProduct: Product = {
+    ...existingProduct,
+    name: data.name,
+    slug: generateSlug(data.name),
+    category: category?.name || data.categorySlug,
+    categorySlug: data.categorySlug,
+    description: data.description,
+    images: data.images,
+    features: data.features,
+    isActive: data.isActive,
+    updatedAt: new Date().toISOString(),
+  };
+
+  const updatedProducts = products.map((product) =>
+    product.id === productId ? updatedProduct : product
+  );
+
+  saveProducts(updatedProducts);
+
+  return updatedProduct;
 }

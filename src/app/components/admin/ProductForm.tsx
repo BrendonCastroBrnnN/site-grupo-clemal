@@ -1,11 +1,14 @@
 import { ImagePlus, PackagePlus, Save } from "lucide-react";
 import { useState } from "react";
-import type { ProductFormData } from "../../types/product";
+import type { Product, ProductFormData } from "../../types/product";
 import { getCategories } from "../../services/categoriesService";
-import { createProduct } from "../../services/productsService";
+import { createProduct, updateProduct } from "../../services/productsService";
+
 
 interface ProductFormProps {
-    onProductCreated?: () => void;
+    productToEdit?: Product | null;
+    onProductSaved?: () => void;
+    onCancelEdit?: () => void;
 }
 
 const initialFormData: ProductFormData = {
@@ -17,8 +20,23 @@ const initialFormData: ProductFormData = {
     isActive: true,
 };
 
-export function ProductForm({ onProductCreated }: ProductFormProps) {
-    const [formData, setFormData] = useState<ProductFormData>(initialFormData);
+export function ProductForm({
+    productToEdit,
+    onProductSaved,
+    onCancelEdit,
+}: ProductFormProps) {
+    const [formData, setFormData] = useState<ProductFormData>(
+        productToEdit
+            ? {
+                name: productToEdit.name,
+                categorySlug: productToEdit.categorySlug,
+                description: productToEdit.description,
+                images: productToEdit.images,
+                features: productToEdit.features,
+                isActive: productToEdit.isActive,
+            }
+            : initialFormData
+    );
     const [featureText, setFeatureText] = useState("");
     const categories = getCategories();
 
@@ -108,14 +126,21 @@ export function ProductForm({ onProductCreated }: ProductFormProps) {
             return;
         }
 
-        const product = createProduct(formData);
+        if (productToEdit) {
+    const product = updateProduct(productToEdit.id, formData);
 
-        console.log("Produto cadastrado em memória:", product);
-        alert("Produto cadastrado temporariamente. Depois será salvo no banco de dados.");
+    console.log("Produto atualizado em memória:", product);
+    alert("Produto atualizado temporariamente. Depois será salvo no banco de dados.");
+} else {
+    const product = createProduct(formData);
 
-        setFormData(initialFormData);
-        setFeatureText("");
-        onProductCreated?.();
+    console.log("Produto cadastrado em memória:", product);
+    alert("Produto cadastrado temporariamente. Depois será salvo no banco de dados.");
+}
+
+setFormData(initialFormData);
+setFeatureText("");
+onProductSaved?.();
     }
 
     return (
@@ -309,8 +334,17 @@ export function ProductForm({ onProductCreated }: ProductFormProps) {
                         className="w-full inline-flex items-center justify-center gap-2 bg-[#dc2626] hover:bg-[#b91c1c] text-white font-bold py-4 rounded-xl transition-colors"
                     >
                         <Save className="w-5 h-5" />
-                        Salvar produto
+                        {productToEdit ? "Atualizar produto" : "Salvar produto"}
                     </button>
+                    {productToEdit && (
+    <button
+        type="button"
+        onClick={onCancelEdit}
+        className="w-full mb-3 inline-flex items-center justify-center gap-2 border border-gray-200 text-gray-700 font-semibold py-3 rounded-xl hover:border-gray-400 transition-colors"
+    >
+        Cancelar edição
+    </button>
+)}
                 </div>
             </aside>
         </form>
