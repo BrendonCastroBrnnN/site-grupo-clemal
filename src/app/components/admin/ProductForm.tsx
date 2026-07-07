@@ -100,6 +100,21 @@ export function ProductForm({
         }));
     }
 
+    function handleSetCoverImage(index: number) {
+        setFormData((current) => {
+            const selectedImage = current.images[index];
+
+            if (!selectedImage) return current;
+
+            const remainingImages = current.images.filter((_, imageIndex) => imageIndex !== index);
+
+            return {
+                ...current,
+                images: [selectedImage, ...remainingImages],
+            };
+        });
+    }
+
     function handleAddFeature() {
         const value = featureText.trim();
 
@@ -331,6 +346,15 @@ export function ProductForm({
                                     >
                                         ×
                                     </button>
+                                    {index !== 0 && (
+                                        <button
+                                            type="button"
+                                            onClick={() => handleSetCoverImage(index)}
+                                            className="absolute bottom-2 left-2 right-2 rounded-lg bg-white/90 text-gray-800 text-[10px] font-bold px-2 py-1 hover:bg-white transition-colors"
+                                        >
+                                            Usar como capa
+                                        </button>
+                                    )}
                                 </div>
                             ))}
                         </div>
@@ -346,13 +370,6 @@ export function ProductForm({
                         selecionada.
                     </p>
 
-                    <button
-                        type="submit"
-                        className="w-full inline-flex items-center justify-center gap-2 bg-[#dc2626] hover:bg-[#b91c1c] text-white font-bold py-4 rounded-xl transition-colors"
-                    >
-                        <Save className="w-5 h-5" />
-                        {productToEdit ? "Atualizar produto" : "Salvar produto"}
-                    </button>
                     {productToEdit && (
                         <button
                             type="button"
@@ -362,6 +379,14 @@ export function ProductForm({
                             Cancelar edição
                         </button>
                     )}
+
+                    <button
+                        type="submit"
+                        className="w-full inline-flex items-center justify-center gap-2 bg-[#dc2626] hover:bg-[#b91c1c] text-white font-bold py-4 rounded-xl transition-colors"
+                    >
+                        <Save className="w-5 h-5" />
+                        {productToEdit ? "Atualizar produto" : "Salvar produto"}
+                    </button>
                 </div>
             </aside>
         </form>
