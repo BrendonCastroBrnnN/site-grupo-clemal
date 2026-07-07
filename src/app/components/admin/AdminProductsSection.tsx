@@ -8,10 +8,18 @@ import {
 } from "../../services/productsService";
 import type { Product } from "../../types/product";
 
-export function AdminProductsSection() {
+interface AdminProductsSectionProps {
+    onNavigate: (page: string, params?: Record<string, string>) => void;
+}
+
+export function AdminProductsSection({ onNavigate }: AdminProductsSectionProps) {
     const [refreshKey, setRefreshKey] = useState(0);
     const products = getAllProducts();
     const [productToEdit, setProductToEdit] = useState<Product | null>(null);
+
+    function handleOpenProduct(product: Product) {
+        onNavigate("product", { slug: product.slug });
+    }
 
     function refreshProducts() {
         setRefreshKey((current) => current + 1);
@@ -43,6 +51,7 @@ export function AdminProductsSection() {
                 onDeleteProduct={handleDeleteProduct}
                 onToggleProductStatus={handleToggleProductStatus}
                 onEditProduct={setProductToEdit}
+                onOpenProduct={handleOpenProduct}
             />
         </div>
     );

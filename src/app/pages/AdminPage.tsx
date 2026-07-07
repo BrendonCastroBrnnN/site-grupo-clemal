@@ -26,7 +26,7 @@ export function AdminPage({ onNavigate }: AdminPageProps) {
     function renderSection() {
         switch (activeSection) {
             case "products":
-                return <AdminProductsSection />;
+                return <AdminProductsSection onNavigate={onNavigate} />;
 
             case "categories":
                 return <AdminCategoriesSection />;
@@ -91,8 +91,8 @@ export function AdminPage({ onNavigate }: AdminPageProps) {
                                     type="button"
                                     onClick={() => setActiveSection(id)}
                                     className={`w-full flex items-center gap-3 px-4 py-3 rounded-2xl text-sm font-semibold transition-colors ${activeSection === id
-                                            ? "bg-[#111111] text-white"
-                                            : "text-gray-600 hover:bg-[#fafafa] hover:text-gray-900"
+                                        ? "bg-[#111111] text-white"
+                                        : "text-gray-600 hover:bg-[#fafafa] hover:text-gray-900"
                                         }`}
                                 >
                                     <Icon className="w-4 h-4" />

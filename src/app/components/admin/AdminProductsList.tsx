@@ -1,4 +1,4 @@
-import { Eye, EyeOff, PackageOpen, Pencil, Trash2 } from "lucide-react";
+import { Eye, EyeOff, ExternalLink, PackageOpen, Pencil, Trash2 } from "lucide-react";
 import type { Product } from "../../types/product";
 
 interface AdminProductsListProps {
@@ -6,6 +6,7 @@ interface AdminProductsListProps {
     onDeleteProduct: (productId: string) => void;
     onToggleProductStatus: (productId: string) => void;
     onEditProduct: (product: Product) => void;
+    onOpenProduct: (product: Product) => void;
 }
 
 export function AdminProductsList({
@@ -13,6 +14,7 @@ export function AdminProductsList({
     onDeleteProduct,
     onToggleProductStatus,
     onEditProduct,
+    onOpenProduct,
 }: AdminProductsListProps) {
     if (products.length === 0) {
         return (
@@ -54,12 +56,21 @@ export function AdminProductsList({
                         <div className="flex items-center gap-2 md:justify-end">
                             <span
                                 className={`text-xs font-semibold px-3 py-1 rounded-full ${product.isActive
-                                        ? "text-emerald-600 bg-emerald-50"
-                                        : "text-gray-500 bg-gray-100"
+                                    ? "text-emerald-600 bg-emerald-50"
+                                    : "text-gray-500 bg-gray-100"
                                     }`}
                             >
                                 {product.isActive ? "Ativo" : "Inativo"}
                             </span>
+
+                            <button
+                                type="button"
+                                onClick={() => onOpenProduct(product)}
+                                className="w-9 h-9 rounded-xl border border-gray-100 text-gray-500 hover:text-[#dc2626] hover:border-[#dc2626] transition-colors flex items-center justify-center"
+                                title="Abrir produto"
+                            >
+                                <ExternalLink className="w-4 h-4" />
+                            </button>
 
                             <button
                                 type="button"
