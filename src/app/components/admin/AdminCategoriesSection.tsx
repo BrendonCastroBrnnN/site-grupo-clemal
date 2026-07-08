@@ -1,9 +1,10 @@
-import { Pencil, Plus, Tags, Eye, EyeOff, Trash2 } from "lucide-react";
+import { ArrowDown, ArrowUp, Pencil, Plus, Tags, Eye, EyeOff, Trash2 } from "lucide-react";
 import { useState } from "react";
 import {
     createCategory,
     deleteCategory,
     getAllCategories,
+    moveCategory,
     toggleCategoryStatus,
     updateCategory,
 } from "../../services/categoriesService";
@@ -25,6 +26,11 @@ export function AdminCategoriesSection() {
 
     function handleToggleCategoryStatus(categoryId: string) {
         toggleCategoryStatus(categoryId);
+        refreshCategories();
+    }
+
+    function handleMoveCategory(categoryId: string, direction: "up" | "down") {
+        moveCategory(categoryId, direction);
         refreshCategories();
     }
 
@@ -165,6 +171,24 @@ export function AdminCategoriesSection() {
                                 >
                                     {category.isActive ? "Ativa" : "Inativa"}
                                 </span>
+
+                                <button
+                                    type="button"
+                                    onClick={() => handleMoveCategory(category.id, "up")}
+                                    className="w-9 h-9 rounded-xl border border-gray-100 text-gray-500 hover:text-[#dc2626] hover:border-[#dc2626] transition-colors flex items-center justify-center"
+                                    title="Mover para cima"
+                                >
+                                    <ArrowUp className="w-4 h-4" />
+                                </button>
+
+                                <button
+                                    type="button"
+                                    onClick={() => handleMoveCategory(category.id, "down")}
+                                    className="w-9 h-9 rounded-xl border border-gray-100 text-gray-500 hover:text-[#dc2626] hover:border-[#dc2626] transition-colors flex items-center justify-center"
+                                    title="Mover para baixo"
+                                >
+                                    <ArrowDown className="w-4 h-4" />
+                                </button>
 
                                 <button
                                     type="button"
