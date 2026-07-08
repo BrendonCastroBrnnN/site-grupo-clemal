@@ -129,3 +129,32 @@ export function toggleCategoryStatus(categoryId: string): void {
 
   saveCategories(updatedCategories);
 }
+
+export function updateCategory(
+  categoryId: string,
+  data: {
+    name: string;
+    description: string;
+  }
+): Category | undefined {
+  const categories = loadCategories();
+  const existingCategory = categories.find((category) => category.id === categoryId);
+
+  if (!existingCategory) return undefined;
+
+  const updatedCategory: Category = {
+    ...existingCategory,
+    name: data.name,
+    slug: generateSlug(data.name),
+    description: data.description,
+    updatedAt: new Date().toISOString(),
+  };
+
+  const updatedCategories = categories.map((category) =>
+    category.id === categoryId ? updatedCategory : category
+  );
+
+  saveCategories(updatedCategories);
+
+  return updatedCategory;
+}

@@ -1,10 +1,11 @@
-import { Plus, Tags } from "lucide-react";
+import { Pencil, Plus, Tags, Eye, EyeOff, Trash2 } from "lucide-react";
 import { useState } from "react";
 import {
     createCategory,
     deleteCategory,
     getAllCategories,
     toggleCategoryStatus,
+    updateCategory,
 } from "../../services/categoriesService";
 import { getAllProducts } from "../../services/productsService";
 
@@ -12,6 +13,7 @@ export function AdminCategoriesSection() {
     const [refreshKey, setRefreshKey] = useState(0);
     const [name, setName] = useState("");
     const [description, setDescription] = useState("");
+    const [categoryToEditId, setCategoryToEditId] = useState<string | null>(null);
 
     const categories = getAllCategories();
 
@@ -50,11 +52,31 @@ export function AdminCategoriesSection() {
             return;
         }
 
-        createCategory(name.trim(), description.trim());
+        if (categoryToEditId) {
+            updateCategory(categoryToEditId, {
+                name: name.trim(),
+                description: description.trim(),
+            });
+        } else {
+            createCategory(name.trim(), description.trim());
+        }
 
         setName("");
         setDescription("");
+        setCategoryToEditId(null);
         refreshCategories();
+    }
+
+    function handleEditCategory(categoryId: string, categoryName: string, categoryDescription = "") {
+        setCategoryToEditId(categoryId);
+        setName(categoryName);
+        setDescription(categoryDescription);
+    }
+
+    function handleCancelEdit() {
+        setCategoryToEditId(null);
+        setName("");
+        setDescription("");
     }
 
     return (
@@ -66,7 +88,9 @@ export function AdminCategoriesSection() {
                     </div>
 
                     <div>
-                        <h2 className="font-bold text-gray-900">Nova categoria</h2>
+                        <h2 className="font-bold text-gray-900">
+                            {categoryToEditId ? "Editar categoria" : "Nova categoria"}
+                        </h2>
                         <p className="text-sm text-gray-500">
                             Crie categorias que serão usadas no cadastro e na página pública de produtos.
                         </p>
@@ -92,8 +116,18 @@ export function AdminCategoriesSection() {
                         type="submit"
                         className="rounded-xl bg-[#111111] text-white font-semibold px-5 py-3 text-sm hover:bg-[#262626] transition-colors"
                     >
-                        Adicionar
+                        {categoryToEditId ? "Atualizar" : "Adicionar"}
                     </button>
+
+                    {categoryToEditId && (
+                        <button
+                            type="button"
+                            onClick={handleCancelEdit}
+                            className="rounded-xl border border-gray-200 text-gray-700 font-semibold px-5 py-3 text-sm hover:border-gray-400 transition-colors"
+                        >
+                            Cancelar
+                        </button>
+                    )}
                 </div>
             </form>
 
@@ -125,8 +159,8 @@ export function AdminCategoriesSection() {
                             <div className="flex items-center gap-2">
                                 <span
                                     className={`text-xs font-semibold px-3 py-1 rounded-full ${category.isActive
-                                            ? "text-emerald-600 bg-emerald-50"
-                                            : "text-gray-500 bg-gray-100"
+                                        ? "text-emerald-600 bg-emerald-50"
+                                        : "text-gray-500 bg-gray-100"
                                         }`}
                                 >
                                     {category.isActive ? "Ativa" : "Inativa"}
@@ -134,18 +168,39 @@ export function AdminCategoriesSection() {
 
                                 <button
                                     type="button"
+                                    onClick={() =>
+                                        handleEditCategory(
+                                            category.id,
+                                            category.name,
+                                            category.description
+                                        )
+                                    }
+                                    className="w-9 h-9 rounded-xl border border-gray-100 text-gray-500 hover:text-[#dc2626] hover:border-[#dc2626] transition-colors flex items-center justify-center"
+                                    title="Editar categoria"
+                                >
+                                    <Pencil className="w-4 h-4" />
+                                </button>
+
+                                <button
+                                    type="button"
                                     onClick={() => handleToggleCategoryStatus(category.id)}
                                     className="w-9 h-9 rounded-xl border border-gray-100 text-gray-500 hover:text-[#dc2626] hover:border-[#dc2626] transition-colors flex items-center justify-center"
+                                    title={category.isActive ? "Inativar categoria" : "Ativar categoria"}
                                 >
-                                    {category.isActive ? "–" : "+"}
+                                    {category.isActive ? (
+                                        <EyeOff className="w-4 h-4" />
+                                    ) : (
+                                        <Eye className="w-4 h-4" />
+                                    )}
                                 </button>
 
                                 <button
                                     type="button"
                                     onClick={() => handleDeleteCategory(category.id, category.slug)}
                                     className="w-9 h-9 rounded-xl border border-gray-100 text-gray-500 hover:text-[#dc2626] hover:border-[#dc2626] transition-colors flex items-center justify-center"
+                                    title="Excluir categoria"
                                 >
-                                    ×
+                                    <Trash2 className="w-4 h-4" />
                                 </button>
                             </div>
                         </div>
