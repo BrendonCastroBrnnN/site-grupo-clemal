@@ -2,6 +2,7 @@ import { LayoutDashboard, Package, Settings, Tags } from "lucide-react";
 import { useState } from "react";
 import { AdminProductsSection } from "../components/admin/AdminProductsSection";
 import { AdminCategoriesSection } from "../components/admin/AdminCategoriesSection";
+import { AdminDashboard } from "../components/admin/AdminDashboard";
 
 type AdminSection = "dashboard" | "products" | "categories" | "settings";
 
@@ -21,7 +22,7 @@ const menuItems: {
     ];
 
 export function AdminPage({ onNavigate }: AdminPageProps) {
-    const [activeSection, setActiveSection] = useState<AdminSection>("products");
+    const [activeSection, setActiveSection] = useState<AdminSection>("dashboard");
 
     function renderSection() {
         switch (activeSection) {
@@ -43,14 +44,7 @@ export function AdminPage({ onNavigate }: AdminPageProps) {
 
             case "dashboard":
             default:
-                return (
-                    <div className="bg-white rounded-3xl border border-gray-100 p-8">
-                        <h2 className="font-bold text-gray-900 text-xl mb-2">Dashboard</h2>
-                        <p className="text-sm text-gray-500">
-                            Visão geral do painel administrativo será adicionada posteriormente.
-                        </p>
-                    </div>
-                );
+                return <AdminDashboard />;
         }
     }
 
