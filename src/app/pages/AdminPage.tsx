@@ -1,8 +1,10 @@
-import { LayoutDashboard, Package, Settings, Tags } from "lucide-react";
+import { LayoutDashboard, LogOut, Package, Settings, Tags } from "lucide-react";
 import { useState } from "react";
 import { AdminProductsSection } from "../components/admin/AdminProductsSection";
 import { AdminCategoriesSection } from "../components/admin/AdminCategoriesSection";
 import { AdminDashboard } from "../components/admin/AdminDashboard";
+import { AdminLogin } from "../components/admin/AdminLogin";
+import { useAdminAuth } from "../hooks/useAdminAuth";
 
 type AdminSection = "dashboard" | "products" | "categories" | "settings";
 
@@ -23,6 +25,12 @@ const menuItems: {
 
 export function AdminPage({ onNavigate }: AdminPageProps) {
     const [activeSection, setActiveSection] = useState<AdminSection>("dashboard");
+
+    const { isAuthenticated, login, logout } = useAdminAuth();
+
+    if (!isAuthenticated) {
+        return <AdminLogin onLogin={login} />;
+    }
 
     function renderSection() {
         switch (activeSection) {
@@ -72,6 +80,14 @@ export function AdminPage({ onNavigate }: AdminPageProps) {
                         Gerencie produtos, categorias, imagens e informações exibidas no site institucional do
                         Grupo Clemal.
                     </p>
+                    <button
+                        type="button"
+                        onClick={logout}
+                        className="mt-6 inline-flex items-center gap-2 rounded-xl border border-white/10 px-4 py-2 text-sm font-semibold text-white hover:bg-white/10 transition-colors"
+                    >
+                        <LogOut className="w-4 h-4" />
+                        Sair do painel
+                    </button>
                 </div>
             </section>
 
