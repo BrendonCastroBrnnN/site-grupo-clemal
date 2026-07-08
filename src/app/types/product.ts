@@ -8,6 +8,9 @@ export interface Product {
   images: string[];
   features: string[];
   isActive: boolean;
+
+  order?: number;
+
   createdAt?: string;
   updatedAt?: string;
 }

@@ -4,6 +4,7 @@ import { AdminProductsList } from "./AdminProductsList";
 import {
     deleteProduct,
     getAllProducts,
+    moveProduct,
     toggleProductStatus,
 } from "../../services/productsService";
 import type { Product } from "../../types/product";
@@ -35,6 +36,11 @@ export function AdminProductsSection({ onNavigate }: AdminProductsSectionProps) 
         refreshProducts();
     }
 
+    function handleMoveProduct(productId: string, direction: "up" | "down") {
+        moveProduct(productId, direction);
+        refreshProducts();
+    }
+
     return (
         <div className="space-y-8" key={refreshKey}>
             <ProductForm
@@ -52,6 +58,7 @@ export function AdminProductsSection({ onNavigate }: AdminProductsSectionProps) 
                 onToggleProductStatus={handleToggleProductStatus}
                 onEditProduct={setProductToEdit}
                 onOpenProduct={handleOpenProduct}
+                onMoveProduct={handleMoveProduct}
             />
         </div>
     );
