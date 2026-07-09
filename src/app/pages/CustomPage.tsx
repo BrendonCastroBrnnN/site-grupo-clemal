@@ -62,7 +62,6 @@ export function CustomPage() {
                 "Malotes personalizados para bancos e transportadoras",
                 "Capas protetoras para equipamentos específicos",
                 "Bainhas e porta-ferramentas sob medida",
-                "Uniformes e acessórios para equipes de campo",
                 "Bonés e chapéus corporativos bordados",
                 "Embalagens e cases para produtos especiais",
                 "Qualquer produto em couro, nylon, lona ou similar",
@@ -80,7 +79,6 @@ export function CustomPage() {
                 <p className="font-bold text-[#111111]">Por que nos escolher?</p>
               </div>
               <ul className="space-y-1.5 text-sm text-gray-600">
-                <li>✓ Pedido mínimo a partir de 50 unidades</li>
                 <li>✓ Prazo de entrega a combinar</li>
                 <li>✓ Amostras disponíveis para aprovação</li>
                 <li>✓ Preço especial para grandes volumes</li>
