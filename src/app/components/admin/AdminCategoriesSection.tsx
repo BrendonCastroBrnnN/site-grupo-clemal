@@ -1,5 +1,5 @@
-import { ArrowDown, ArrowUp, Pencil, Plus, Tags, Eye, EyeOff, Trash2 } from "lucide-react";
-import { useState } from "react";
+import { ArrowDown, ArrowUp, Eye, EyeOff, Pencil, Plus, Tags, Trash2 } from "lucide-react";
+import { useEffect, useState } from "react";
 import {
     createCategory,
     deleteCategory,
@@ -9,32 +9,44 @@ import {
     updateCategory,
 } from "../../services/categoriesService";
 import { getAllProducts } from "../../services/productsService";
+import type { Category, Product } from "../../types/product";
 
 export function AdminCategoriesSection() {
-    const [refreshKey, setRefreshKey] = useState(0);
+    const [categories, setCategories] = useState<Category[]>([]);
+    const [products, setProducts] = useState<Product[]>([]);
     const [name, setName] = useState("");
     const [description, setDescription] = useState("");
     const [categoryToEditId, setCategoryToEditId] = useState<string | null>(null);
+    const [isLoading, setIsLoading] = useState(true);
 
-    const categories = getAllCategories();
+    async function loadData() {
+        setIsLoading(true);
 
-    const products = getAllProducts();
+        const [loadedCategories, loadedProducts] = await Promise.all([
+            getAllCategories(),
+            getAllProducts(),
+        ]);
 
-    function refreshCategories() {
-        setRefreshKey((current) => current + 1);
+        setCategories(loadedCategories);
+        setProducts(loadedProducts);
+        setIsLoading(false);
     }
 
-    function handleToggleCategoryStatus(categoryId: string) {
-        toggleCategoryStatus(categoryId);
-        refreshCategories();
+    useEffect(() => {
+        loadData();
+    }, []);
+
+    async function handleToggleCategoryStatus(categoryId: string) {
+        await toggleCategoryStatus(categoryId);
+        await loadData();
     }
 
-    function handleMoveCategory(categoryId: string, direction: "up" | "down") {
-        moveCategory(categoryId, direction);
-        refreshCategories();
+    async function handleMoveCategory(categoryId: string, direction: "up" | "down") {
+        await moveCategory(categoryId, direction);
+        await loadData();
     }
 
-    function handleDeleteCategory(categoryId: string, categorySlug: string) {
+    async function handleDeleteCategory(categoryId: string, categorySlug: string) {
         const hasProducts = products.some((product) => product.categorySlug === categorySlug);
 
         if (hasProducts) {
@@ -46,11 +58,11 @@ export function AdminCategoriesSection() {
 
         if (!confirmed) return;
 
-        deleteCategory(categoryId);
-        refreshCategories();
+        await deleteCategory(categoryId);
+        await loadData();
     }
 
-    function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
+    async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
         event.preventDefault();
 
         if (!name.trim()) {
@@ -59,18 +71,18 @@ export function AdminCategoriesSection() {
         }
 
         if (categoryToEditId) {
-            updateCategory(categoryToEditId, {
+            await updateCategory(categoryToEditId, {
                 name: name.trim(),
                 description: description.trim(),
             });
         } else {
-            createCategory(name.trim(), description.trim());
+            await createCategory(name.trim(), description.trim());
         }
 
         setName("");
         setDescription("");
         setCategoryToEditId(null);
-        refreshCategories();
+        await loadData();
     }
 
     function handleEditCategory(categoryId: string, categoryName: string, categoryDescription = "") {
@@ -85,8 +97,16 @@ export function AdminCategoriesSection() {
         setDescription("");
     }
 
+    if (isLoading) {
+        return (
+            <div className="bg-white rounded-3xl border border-gray-100 p-8">
+                <p className="text-sm text-gray-500">Carregando categorias...</p>
+            </div>
+        );
+    }
+
     return (
-        <div className="space-y-8" key={refreshKey}>
+        <div className="space-y-8">
             <form onSubmit={handleSubmit} className="bg-white rounded-3xl border border-gray-100 p-6">
                 <div className="flex items-center gap-3 mb-6">
                     <div className="w-11 h-11 rounded-2xl bg-[#fafafa] border border-gray-100 flex items-center justify-center">
@@ -164,10 +184,11 @@ export function AdminCategoriesSection() {
 
                             <div className="flex items-center gap-2">
                                 <span
-                                    className={`text-xs font-semibold px-3 py-1 rounded-full ${category.isActive
-                                        ? "text-emerald-600 bg-emerald-50"
-                                        : "text-gray-500 bg-gray-100"
-                                        }`}
+                                    className={`text-xs font-semibold px-3 py-1 rounded-full ${
+                                        category.isActive
+                                            ? "text-emerald-600 bg-emerald-50"
+                                            : "text-gray-500 bg-gray-100"
+                                    }`}
                                 >
                                     {category.isActive ? "Ativa" : "Inativa"}
                                 </span>

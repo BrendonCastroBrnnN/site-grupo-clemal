@@ -1,49 +1,5 @@
+import { supabase } from "../lib/supabase";
 import type { Category } from "../types/product";
-
-const STORAGE_KEY = "grupo-clemal-categories";
-
-const defaultCategories: Category[] = [
-    {
-        id: "1",
-        name: "Bainhas",
-        slug: "bainhas",
-        description: "Bainhas para ferramentas técnicas e operacionais.",
-        isActive: true,
-        order: 1,
-    },
-    {
-        id: "2",
-        name: "Bolsas técnicas",
-        slug: "bolsas-tecnicas",
-        description: "Bolsas para equipes de campo, manutenção e operação.",
-        isActive: true,
-        order: 2,
-    },
-    {
-        id: "3",
-        name: "Capas de proteção",
-        slug: "capas-protecao",
-        description: "Capas para coletores, celulares, tablets e impressoras portáteis.",
-        isActive: true,
-        order: 3,
-    },
-    {
-        id: "4",
-        name: "Bonés",
-        slug: "bones",
-        description: "Bonés profissionais e personalizados.",
-        isActive: true,
-        order: 4,
-    },
-    {
-        id: "5",
-        name: "Projetos personalizados",
-        slug: "personalizados",
-        description: "Produtos desenvolvidos sob demanda.",
-        isActive: true,
-        order: 5,
-    },
-];
 
 function generateSlug(value: string): string {
     return value
@@ -55,114 +11,145 @@ function generateSlug(value: string): string {
         .replace(/\s+/g, "-");
 }
 
-function loadCategories(): Category[] {
-    const stored = localStorage.getItem(STORAGE_KEY);
-
-    if (!stored) {
-        localStorage.setItem(STORAGE_KEY, JSON.stringify(defaultCategories));
-        return defaultCategories;
-    }
-
-    try {
-        return JSON.parse(stored) as Category[];
-    } catch {
-        return defaultCategories;
-    }
-}
-
-function saveCategories(categories: Category[]) {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(categories));
-}
-
-export function getCategories(): Category[] {
-    return loadCategories()
-        .filter((category) => category.isActive)
-        .sort((a, b) => (a.order || 0) - (b.order || 0));
-}
-
-export function getAllCategories(): Category[] {
-    return loadCategories().sort(
-        (a, b) => (a.order || 0) - (b.order || 0)
-    );
-}
-
-export function getCategoryBySlug(slug: string): Category | undefined {
-    return getCategories().find((category) => category.slug === slug);
-}
-
-export function createCategory(name: string, description: string): Category {
-    const categories = loadCategories();
-
-    const category: Category = {
-        id: crypto.randomUUID(),
-        name,
-        slug: generateSlug(name),
-        description,
-        isActive: true,
-        order: categories.length + 1,
-        createdAt: new Date().toISOString(),
+function mapCategoryFromDatabase(category: any): Category {
+    return {
+        id: category.id,
+        name: category.name,
+        slug: category.slug,
+        description: category.description,
+        isActive: category.is_active,
+        order: category.display_order,
+        createdAt: category.created_at,
+        updatedAt: category.updated_at,
     };
-
-    saveCategories([...categories, category]);
-
-    return category;
 }
 
-export function deleteCategory(categoryId: string): void {
-    const categories = loadCategories();
+export async function getCategories(): Promise<Category[]> {
+    const { data, error } = await supabase
+        .from("categories")
+        .select("*")
+        .eq("is_active", true)
+        .order("display_order", { ascending: true });
 
-    const updatedCategories = categories.filter((category) => category.id !== categoryId);
+    if (error) {
+        console.error("Erro ao buscar categorias:", error);
+        return [];
+    }
 
-    saveCategories(updatedCategories);
+    return (data || []).map(mapCategoryFromDatabase);
 }
 
-export function toggleCategoryStatus(categoryId: string): void {
-    const categories = loadCategories();
+export async function getAllCategories(): Promise<Category[]> {
+    const { data, error } = await supabase
+        .from("categories")
+        .select("*")
+        .order("display_order", { ascending: true });
 
-    const updatedCategories = categories.map((category) =>
-        category.id === categoryId
-            ? {
-                ...category,
-                isActive: !category.isActive,
-                updatedAt: new Date().toISOString(),
-            }
-            : category
-    );
+    if (error) {
+        console.error("Erro ao buscar todas as categorias:", error);
+        return [];
+    }
 
-    saveCategories(updatedCategories);
+    return (data || []).map(mapCategoryFromDatabase);
 }
 
-export function updateCategory(
+export async function getCategoryBySlug(slug: string): Promise<Category | undefined> {
+    const { data, error } = await supabase
+        .from("categories")
+        .select("*")
+        .eq("slug", slug)
+        .eq("is_active", true)
+        .single();
+
+    if (error) {
+        return undefined;
+    }
+
+    return mapCategoryFromDatabase(data);
+}
+
+export async function createCategory(name: string, description: string): Promise<Category | undefined> {
+    const categories = await getAllCategories();
+
+    const { data, error } = await supabase
+        .from("categories")
+        .insert({
+            name,
+            slug: generateSlug(name),
+            description,
+            is_active: true,
+            display_order: categories.length + 1,
+        })
+        .select()
+        .single();
+
+    if (error) {
+        console.error("Erro ao criar categoria:", error);
+        return undefined;
+    }
+
+    return mapCategoryFromDatabase(data);
+}
+
+export async function deleteCategory(categoryId: string): Promise<void> {
+    const { error } = await supabase
+        .from("categories")
+        .delete()
+        .eq("id", categoryId);
+
+    if (error) {
+        console.error("Erro ao excluir categoria:", error);
+    }
+}
+
+export async function toggleCategoryStatus(categoryId: string): Promise<void> {
+    const categories = await getAllCategories();
+    const category = categories.find((item) => item.id === categoryId);
+
+    if (!category) return;
+
+    const { error } = await supabase
+        .from("categories")
+        .update({
+            is_active: !category.isActive,
+            updated_at: new Date().toISOString(),
+        })
+        .eq("id", categoryId);
+
+    if (error) {
+        console.error("Erro ao alterar status da categoria:", error);
+    }
+}
+
+export async function updateCategory(
     categoryId: string,
     data: {
         name: string;
         description: string;
     }
-): Category | undefined {
-    const categories = loadCategories();
-    const existingCategory = categories.find((category) => category.id === categoryId);
+): Promise<Category | undefined> {
+    const { data: updatedCategory, error } = await supabase
+        .from("categories")
+        .update({
+            name: data.name,
+            slug: generateSlug(data.name),
+            description: data.description,
+            updated_at: new Date().toISOString(),
+        })
+        .eq("id", categoryId)
+        .select()
+        .single();
 
-    if (!existingCategory) return undefined;
+    if (error) {
+        console.error("Erro ao atualizar categoria:", error);
+        return undefined;
+    }
 
-    const updatedCategory: Category = {
-        ...existingCategory,
-        name: data.name,
-        slug: generateSlug(data.name),
-        description: data.description,
-        updatedAt: new Date().toISOString(),
-    };
-
-    const updatedCategories = categories.map((category) =>
-        category.id === categoryId ? updatedCategory : category
-    );
-
-    saveCategories(updatedCategories);
-
-    return updatedCategory;
+    return mapCategoryFromDatabase(updatedCategory);
 }
 
-export function moveCategory(categoryId: string, direction: "up" | "down"): void {
-    const categories = loadCategories().sort((a, b) => (a.order || 0) - (b.order || 0));
+export async function moveCategory(categoryId: string, direction: "up" | "down"): Promise<void> {
+    const categories = await getAllCategories();
 
     const currentIndex = categories.findIndex((category) => category.id === categoryId);
 
@@ -180,11 +167,15 @@ export function moveCategory(categoryId: string, direction: "up" | "down"): void
     updatedCategories[currentIndex] = targetCategory;
     updatedCategories[targetIndex] = currentCategory;
 
-    const reorderedCategories = updatedCategories.map((category, index) => ({
-        ...category,
-        order: index + 1,
-        updatedAt: new Date().toISOString(),
-    }));
+    const updates = updatedCategories.map((category, index) =>
+        supabase
+            .from("categories")
+            .update({
+                display_order: index + 1,
+                updated_at: new Date().toISOString(),
+            })
+            .eq("id", category.id)
+    );
 
-    saveCategories(reorderedCategories);
+    await Promise.all(updates);
 }
