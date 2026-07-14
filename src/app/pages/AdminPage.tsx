@@ -1,12 +1,23 @@
-import { LayoutDashboard, LogOut, Package, Settings, Tags } from "lucide-react";
+import {
+    LayoutDashboard,
+    LogOut,
+    MessageSquareText,
+    Package,
+    Tags,
+} from "lucide-react";
 import { useState } from "react";
 import { AdminProductsSection } from "../components/admin/AdminProductsSection";
 import { AdminCategoriesSection } from "../components/admin/AdminCategoriesSection";
 import { AdminDashboard } from "../components/admin/AdminDashboard";
 import { AdminLogin } from "../components/admin/AdminLogin";
 import { useAdminAuth } from "../hooks/useAdminAuth";
+import { AdminInquiriesSection } from "../components/admin/AdminInquiriesSection";
 
-type AdminSection = "dashboard" | "products" | "categories" | "settings";
+type AdminSection =
+    | "dashboard"
+    | "products"
+    | "categories"
+    | "inquiries";
 
 interface AdminPageProps {
     onNavigate: (page: string, params?: Record<string, string>) => void;
@@ -20,7 +31,7 @@ const menuItems: {
         { id: "dashboard", label: "Dashboard", icon: LayoutDashboard },
         { id: "products", label: "Produtos", icon: Package },
         { id: "categories", label: "Categorias", icon: Tags },
-        { id: "settings", label: "Configurações", icon: Settings },
+        { id: "inquiries", label: "Solicitações", icon: MessageSquareText }
     ];
 
 export function AdminPage({ onNavigate }: AdminPageProps) {
@@ -50,15 +61,8 @@ export function AdminPage({ onNavigate }: AdminPageProps) {
             case "categories":
                 return <AdminCategoriesSection />;
 
-            case "settings":
-                return (
-                    <div className="bg-white rounded-3xl border border-gray-100 p-8">
-                        <h2 className="font-bold text-gray-900 text-xl mb-2">Configurações</h2>
-                        <p className="text-sm text-gray-500">
-                            Área reservada para configurações gerais do catálogo e do site.
-                        </p>
-                    </div>
-                );
+            case "inquiries":
+                return <AdminInquiriesSection />;
 
             case "dashboard":
             default:

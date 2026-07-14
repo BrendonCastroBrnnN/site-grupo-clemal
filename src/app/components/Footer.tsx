@@ -30,13 +30,8 @@ export function Footer({ onNavigate }: FooterProps) {
               {[
                 {
                   icon: Instagram,
-                  href: "https://instagram.com",
+                  href: "https://www.instagram.com/grupo_clemal/",
                   label: "Instagram",
-                },
-                {
-                  icon: Youtube,
-                  href: "https://youtube.com",
-                  label: "YouTube",
                 },
                 {
                   icon: MessageCircle,

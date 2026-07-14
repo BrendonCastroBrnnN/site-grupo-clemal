@@ -57,20 +57,38 @@ export default function App() {
 
       default:
         return (
-          <div
-            className="min-h-screen bg-white flex items-center justify-center"
-            style={{ fontFamily: "'Inter', sans-serif" }}
-          >
-            <div className="text-center py-20">
-              <p className="text-gray-400 text-sm mb-5">Página em construção</p>
-              <button
-                onClick={() => navigate("home")}
-                className="bg-[#111111] text-white font-semibold px-6 py-3 rounded-xl hover:bg-[#dc2626] transition-colors"
+          <main className="min-h-screen bg-white flex items-center justify-center px-6">
+            <div className="max-w-md text-center">
+              <p className="text-xs font-bold uppercase tracking-[0.25em] text-[#dc2626] mb-3">
+                Erro 404
+              </p>
+
+              <h1
+                className="text-[#111111] mb-4"
+                style={{
+                  fontFamily: "'Barlow Condensed', sans-serif",
+                  fontSize: "clamp(42px,6vw,72px)",
+                  fontWeight: 900,
+                  lineHeight: 0.95,
+                  letterSpacing: "-0.04em",
+                }}
               >
-                Voltar ao Início
+                Página não encontrada
+              </h1>
+
+              <p className="text-gray-500 leading-relaxed mb-7">
+                A página que você tentou acessar não existe ou não está disponível.
+              </p>
+
+              <button
+                type="button"
+                onClick={() => navigate("home")}
+                className="inline-flex items-center justify-center rounded-xl bg-[#111111] px-6 py-3 text-sm font-bold text-white hover:bg-[#262626] transition-colors"
+              >
+                Voltar para o início
               </button>
             </div>
-          </div>
+          </main>
         );
     }
   };
@@ -91,14 +109,22 @@ export default function App() {
         target="_blank"
         rel="noopener noreferrer"
         className="fixed bottom-6 right-6 z-50 bg-emerald-500 hover:bg-emerald-600 text-white rounded-2xl px-5 py-3.5 flex items-center gap-2.5 transition-all duration-200 hover:scale-105 group"
-        style={{ boxShadow: "0 8px 32px rgba(16,185,129,0.30)", fontFamily: "'Inter', sans-serif" }}
+        style={{
+          boxShadow: "0 8px 32px rgba(16,185,129,0.30)",
+          fontFamily: "'Inter', sans-serif",
+        }}
       >
         <MessageCircle className="w-5 h-5 flex-shrink-0" />
+
         <span
           className="text-sm font-semibold overflow-hidden whitespace-nowrap transition-all duration-300"
           style={{ maxWidth: 0 }}
-          onMouseEnter={e => ((e.currentTarget as HTMLElement).style.maxWidth = "160px")}
-          onMouseLeave={e => ((e.currentTarget as HTMLElement).style.maxWidth = "0px")}
+          onMouseEnter={(event) =>
+            ((event.currentTarget as HTMLElement).style.maxWidth = "160px")
+          }
+          onMouseLeave={(event) =>
+            ((event.currentTarget as HTMLElement).style.maxWidth = "0px")
+          }
         >
           Fale Conosco
         </span>
