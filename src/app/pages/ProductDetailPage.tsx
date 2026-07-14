@@ -1,17 +1,94 @@
-import { ArrowLeft, CheckCircle, MessageCircle, PackageOpen } from "lucide-react";
+import {
+  ArrowLeft,
+  CheckCircle,
+  MessageCircle,
+  PackageOpen,
+} from "lucide-react";
+import { useEffect, useState } from "react";
 import { ProductCard } from "../components/ProductCard";
-import { getProductBySlug, getRelatedProducts } from "../services/productsService";
-import { useState } from "react";
+import {
+  getProductBySlug,
+  getRelatedProducts,
+} from "../services/productsService";
+import type { Product } from "../types/product";
 
 interface ProductDetailProps {
   slug: string;
-  onNavigate: (page: string, params?: Record<string, string>) => void;
+  onNavigate: (
+    page: string,
+    params?: Record<string, string>
+  ) => void;
 }
 
-export function ProductDetailPage({ slug, onNavigate }: ProductDetailProps) {
+export function ProductDetailPage({
+  slug,
+  onNavigate,
+}: ProductDetailProps) {
+  const [product, setProduct] = useState<Product | null>(null);
+  const [relatedProducts, setRelatedProducts] = useState<Product[]>([]);
   const [activeImageIndex, setActiveImageIndex] = useState(0);
+  const [isLoading, setIsLoading] = useState(true);
+  const [loadError, setLoadError] = useState("");
 
-  const product = getProductBySlug(slug);
+  useEffect(() => {
+    let isMounted = true;
+
+    async function loadProduct() {
+      setIsLoading(true);
+      setLoadError("");
+      setProduct(null);
+      setRelatedProducts([]);
+      setActiveImageIndex(0);
+
+      try {
+        const loadedProduct = await getProductBySlug(slug);
+
+        if (!isMounted) return;
+
+        if (!loadedProduct) {
+          setProduct(null);
+          return;
+        }
+
+        setProduct(loadedProduct);
+
+        const loadedRelatedProducts =
+          await getRelatedProducts(loadedProduct);
+
+        if (!isMounted) return;
+
+        setRelatedProducts(loadedRelatedProducts);
+      } catch (error) {
+        console.error("Erro ao carregar produto:", error);
+
+        if (!isMounted) return;
+
+        setProduct(null);
+        setRelatedProducts([]);
+        setLoadError("Não foi possível carregar o produto.");
+      } finally {
+        if (isMounted) {
+          setIsLoading(false);
+        }
+      }
+    }
+
+    loadProduct();
+
+    return () => {
+      isMounted = false;
+    };
+  }, [slug]);
+
+  if (isLoading) {
+    return (
+      <main className="min-h-screen bg-white flex items-center justify-center px-6">
+        <p className="text-sm text-gray-500">
+          Carregando produto...
+        </p>
+      </main>
+    );
+  }
 
   if (!product) {
     return (
@@ -22,14 +99,18 @@ export function ProductDetailPage({ slug, onNavigate }: ProductDetailProps) {
           </div>
 
           <h1 className="text-xl font-bold text-gray-900 mb-2">
-            Produto não encontrado
+            {loadError
+              ? "Erro ao carregar produto"
+              : "Produto não encontrado"}
           </h1>
 
           <p className="text-sm text-gray-500 leading-relaxed mb-6">
-            O produto solicitado ainda não está cadastrado ou foi removido do catálogo.
+            {loadError ||
+              "O produto solicitado não está cadastrado, foi removido ou não está ativo no catálogo."}
           </p>
 
           <button
+            type="button"
             onClick={() => onNavigate("products")}
             className="inline-flex items-center justify-center gap-2 bg-[#111111] text-white font-semibold px-5 py-3 rounded-xl hover:bg-[#262626] transition-colors"
           >
@@ -43,18 +124,24 @@ export function ProductDetailPage({ slug, onNavigate }: ProductDetailProps) {
 
   const activeImage = product.images[activeImageIndex];
 
-  const relatedProducts = getRelatedProducts(product);
-
   const whatsappText = encodeURIComponent(
     `Olá! Tenho interesse no produto ${product.name}. Gostaria de solicitar mais informações.`
   );
 
   return (
-    <main className="min-h-screen bg-white" style={{ fontFamily: "'Inter', sans-serif" }}>
+    <main
+      className="min-h-screen bg-white"
+      style={{ fontFamily: "'Inter', sans-serif" }}
+    >
       <section className="bg-[#111111] text-white">
         <div className="max-w-7xl mx-auto px-6 py-10">
           <button
-            onClick={() => onNavigate("products", { category: product.categorySlug || "all" })}
+            type="button"
+            onClick={() =>
+              onNavigate("products", {
+                category: product.categorySlug || "all",
+              })
+            }
             className="inline-flex items-center gap-2 text-sm text-gray-300 hover:text-white transition-colors mb-8"
           >
             <ArrowLeft className="w-4 h-4" />
@@ -107,10 +194,13 @@ export function ProductDetailPage({ slug, onNavigate }: ProductDetailProps) {
                     type="button"
                     onClick={() =>
                       setActiveImageIndex((current) =>
-                        current === 0 ? product.images.length - 1 : current - 1
+                        current === 0
+                          ? product.images.length - 1
+                          : current - 1
                       )
                     }
                     className="absolute left-4 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full bg-white/90 text-gray-800 shadow flex items-center justify-center hover:bg-white transition-colors text-2xl"
+                    aria-label="Imagem anterior"
                   >
                     ‹
                   </button>
@@ -119,10 +209,13 @@ export function ProductDetailPage({ slug, onNavigate }: ProductDetailProps) {
                     type="button"
                     onClick={() =>
                       setActiveImageIndex((current) =>
-                        current === product.images.length - 1 ? 0 : current + 1
+                        current === product.images.length - 1
+                          ? 0
+                          : current + 1
                       )
                     }
                     className="absolute right-4 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full bg-white/90 text-gray-800 shadow flex items-center justify-center hover:bg-white transition-colors text-2xl"
+                    aria-label="Próxima imagem"
                   >
                     ›
                   </button>
@@ -141,8 +234,11 @@ export function ProductDetailPage({ slug, onNavigate }: ProductDetailProps) {
                     key={`${image}-${index}`}
                     type="button"
                     onClick={() => setActiveImageIndex(index)}
-                    className={`aspect-square rounded-xl overflow-hidden border-2 transition-colors ${activeImageIndex === index ? "border-[#dc2626]" : "border-gray-100"
-                      }`}
+                    className={`aspect-square rounded-xl overflow-hidden border-2 transition-colors ${
+                      activeImageIndex === index
+                        ? "border-[#dc2626]"
+                        : "border-gray-100"
+                    }`}
                   >
                     <img
                       src={image}
@@ -175,14 +271,20 @@ export function ProductDetailPage({ slug, onNavigate }: ProductDetailProps) {
                   <p className="text-xs font-semibold uppercase tracking-wider text-gray-400 mb-1">
                     Categoria
                   </p>
-                  <p className="text-sm font-semibold text-gray-800">{product.category}</p>
+
+                  <p className="text-sm font-semibold text-gray-800">
+                    {product.category}
+                  </p>
                 </div>
 
                 <div>
                   <p className="text-xs font-semibold uppercase tracking-wider text-gray-400 mb-1">
                     Descrição
                   </p>
-                  <p className="text-sm text-gray-600 leading-relaxed">{product.description}</p>
+
+                  <p className="text-sm text-gray-600 leading-relaxed">
+                    {product.description}
+                  </p>
                 </div>
               </div>
 
@@ -194,7 +296,10 @@ export function ProductDetailPage({ slug, onNavigate }: ProductDetailProps) {
 
                   <ul className="space-y-2.5">
                     {product.features.map((feature) => (
-                      <li key={feature} className="flex items-start gap-2.5 text-sm text-gray-700">
+                      <li
+                        key={feature}
+                        className="flex items-start gap-2.5 text-sm text-gray-700"
+                      >
                         <CheckCircle className="w-4 h-4 text-[#dc2626] flex-shrink-0 mt-0.5" />
                         {feature}
                       </li>
@@ -238,7 +343,11 @@ export function ProductDetailPage({ slug, onNavigate }: ProductDetailProps) {
 
             <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-6">
               {relatedProducts.map((item) => (
-                <ProductCard key={item.id} product={item} onNavigate={onNavigate} />
+                <ProductCard
+                  key={item.id}
+                  product={item}
+                  onNavigate={onNavigate}
+                />
               ))}
             </div>
           </div>

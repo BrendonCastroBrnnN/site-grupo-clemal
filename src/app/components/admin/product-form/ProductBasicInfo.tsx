@@ -4,6 +4,7 @@ import type { Category, ProductFormData } from "../../../types/product";
 interface ProductBasicInfoProps {
   formData: ProductFormData;
   categories: Category[];
+  isLoadingCategories?: boolean;
   onChange: (
     field: keyof Omit<ProductFormData, "images" | "features">,
     value: string | boolean
@@ -13,6 +14,7 @@ interface ProductBasicInfoProps {
 export function ProductBasicInfo({
   formData,
   categories,
+  isLoadingCategories = false,
   onChange,
 }: ProductBasicInfoProps) {
   return (
@@ -48,9 +50,14 @@ export function ProductBasicInfo({
           <select
             value={formData.categorySlug}
             onChange={(event) => onChange("categorySlug", event.target.value)}
-            className="w-full rounded-xl border border-gray-200 px-4 py-3 text-sm outline-none focus:border-[#dc2626] bg-white"
+            disabled={isLoadingCategories}
+            className="w-full rounded-xl border border-gray-200 px-4 py-3 text-sm outline-none focus:border-[#dc2626] bg-white disabled:opacity-60 disabled:cursor-not-allowed"
           >
-            <option value="">Selecione uma categoria</option>
+            <option value="">
+              {isLoadingCategories
+                ? "Carregando categorias..."
+                : "Selecione uma categoria"}
+            </option>
             {categories.map((category) => (
               <option key={category.id} value={category.slug}>
                 {category.name}
@@ -59,8 +66,7 @@ export function ProductBasicInfo({
           </select>
 
           <p className="text-xs text-gray-400 mt-2">
-            Depois, essas categorias virão do banco de dados e poderão ser gerenciadas no
-            próprio painel.
+            As categorias são carregadas do banco de dados e gerenciadas pelo painel.
           </p>
         </div>
 

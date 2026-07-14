@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import type { Product, ProductFormData } from "../../types/product";
+import type { Category, Product, ProductFormData } from "../../types/product";
 import { getCategories } from "../../services/categoriesService";
 import { createProduct, updateProduct } from "../../services/productsService";
 import { ProductPublishCard } from "./product-form/ProductPublishCard";
@@ -40,7 +40,26 @@ export function ProductForm({
             : initialFormData
     );
     const [featureText, setFeatureText] = useState("");
-    const categories = getCategories();
+    const [categories, setCategories] = useState<Category[]>([]);
+    const [isLoadingCategories, setIsLoadingCategories] = useState(true);
+
+    useEffect(() => {
+        async function loadCategories() {
+            setIsLoadingCategories(true);
+
+            try {
+                const loadedCategories = await getCategories();
+                setCategories(loadedCategories);
+            } catch (error) {
+                console.error("Erro ao carregar categorias:", error);
+                setCategories([]);
+            } finally {
+                setIsLoadingCategories(false);
+            }
+        }
+
+        loadCategories();
+    }, []);
 
     useEffect(() => {
         if (productToEdit) {
@@ -89,7 +108,7 @@ export function ProductForm({
         }));
     }
 
-    function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
+    async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
         event.preventDefault();
 
         if (!formData.name.trim()) {
@@ -112,21 +131,36 @@ export function ProductForm({
             return;
         }
 
-        if (productToEdit) {
-            const product = updateProduct(productToEdit.id, formData);
+        try {
+            if (productToEdit) {
+                const product = await updateProduct(productToEdit.id, formData);
 
-            console.log("Produto atualizado em memória:", product);
-            alert("Produto atualizado temporariamente. Depois será salvo no banco de dados.");
-        } else {
-            const product = createProduct(formData);
+                if (!product) {
+                    alert("Não foi possível atualizar o produto.");
+                    return;
+                }
 
-            console.log("Produto cadastrado em memória:", product);
-            alert("Produto cadastrado temporariamente. Depois será salvo no banco de dados.");
+                console.log("Produto atualizado no Supabase:", product);
+                alert("Produto atualizado com sucesso.");
+            } else {
+                const product = await createProduct(formData);
+
+                if (!product) {
+                    alert("Não foi possível cadastrar o produto.");
+                    return;
+                }
+
+                console.log("Produto cadastrado no Supabase:", product);
+                alert("Produto cadastrado com sucesso.");
+            }
+
+            setFormData(initialFormData);
+            setFeatureText("");
+            onProductSaved?.();
+        } catch (error) {
+            console.error("Erro ao salvar produto:", error);
+            alert("Ocorreu um erro ao salvar o produto.");
         }
-
-        setFormData(initialFormData);
-        setFeatureText("");
-        onProductSaved?.();
     }
 
     return (
@@ -135,6 +169,7 @@ export function ProductForm({
                 <ProductBasicInfo
                     formData={formData}
                     categories={categories}
+                    isLoadingCategories={isLoadingCategories}
                     onChange={handleChange}
                 />
 

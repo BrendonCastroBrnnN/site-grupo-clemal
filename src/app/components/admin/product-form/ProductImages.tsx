@@ -1,35 +1,84 @@
-import { ImagePlus } from "lucide-react";
+import { ImagePlus, LoaderCircle } from "lucide-react";
+import { useState } from "react";
+import { uploadProductImage } from "../../../services/productImagesService";
 
 interface ProductImagesProps {
   images: string[];
   onImagesChange: (images: string[]) => void;
 }
 
-export function ProductImages({ images, onImagesChange }: ProductImagesProps) {
-  async function handleImagesChange(event: React.ChangeEvent<HTMLInputElement>) {
+const MAX_FILE_SIZE = 10 * 1024 * 1024;
+
+const ALLOWED_IMAGE_TYPES = [
+  "image/jpeg",
+  "image/png",
+  "image/webp",
+];
+
+export function ProductImages({
+  images,
+  onImagesChange,
+}: ProductImagesProps) {
+  const [isUploading, setIsUploading] = useState(false);
+  const [uploadError, setUploadError] = useState("");
+
+  async function handleImagesChange(
+    event: React.ChangeEvent<HTMLInputElement>
+  ) {
     const files = Array.from(event.target.files || []);
+
+    event.target.value = "";
 
     if (files.length === 0) return;
 
-    const newImages = await Promise.all(
-      files.map((file) => {
-        return new Promise<string>((resolve, reject) => {
-          const reader = new FileReader();
-
-          reader.onloadend = () => resolve(reader.result as string);
-          reader.onerror = reject;
-
-          reader.readAsDataURL(file);
-        });
-      })
+    const invalidTypeFile = files.find(
+      (file) => !ALLOWED_IMAGE_TYPES.includes(file.type)
     );
 
-    onImagesChange([...images, ...newImages]);
-    event.target.value = "";
+    if (invalidTypeFile) {
+      setUploadError(
+        `O arquivo "${invalidTypeFile.name}" não possui um formato permitido.`
+      );
+      return;
+    }
+
+    const oversizedFile = files.find(
+      (file) => file.size > MAX_FILE_SIZE
+    );
+
+    if (oversizedFile) {
+      setUploadError(
+        `O arquivo "${oversizedFile.name}" ultrapassa o limite de 10 MB.`
+      );
+      return;
+    }
+
+    setIsUploading(true);
+    setUploadError("");
+
+    try {
+      const uploadedImages = await Promise.all(
+        files.map((file) => uploadProductImage(file))
+      );
+
+      onImagesChange([...images, ...uploadedImages]);
+    } catch (error) {
+      console.error("Erro ao enviar imagens:", error);
+
+      setUploadError(
+        error instanceof Error
+          ? error.message
+          : "Não foi possível enviar as imagens."
+      );
+    } finally {
+      setIsUploading(false);
+    }
   }
 
   function handleRemoveImage(index: number) {
-    onImagesChange(images.filter((_, imageIndex) => imageIndex !== index));
+    onImagesChange(
+      images.filter((_, imageIndex) => imageIndex !== index)
+    );
   }
 
   function handleSetCoverImage(index: number) {
@@ -37,7 +86,9 @@ export function ProductImages({ images, onImagesChange }: ProductImagesProps) {
 
     if (!selectedImage) return;
 
-    const remainingImages = images.filter((_, imageIndex) => imageIndex !== index);
+    const remainingImages = images.filter(
+      (_, imageIndex) => imageIndex !== index
+    );
 
     onImagesChange([selectedImage, ...remainingImages]);
   }
@@ -50,28 +101,56 @@ export function ProductImages({ images, onImagesChange }: ProductImagesProps) {
         </div>
 
         <div>
-          <h2 className="font-bold text-gray-900">Imagens</h2>
-          <p className="text-sm text-gray-500">Fotos do produto.</p>
+          <h2 className="font-bold text-gray-900">
+            Imagens
+          </h2>
+
+          <p className="text-sm text-gray-500">
+            Fotos do produto.
+          </p>
         </div>
       </div>
 
-      <label className="block cursor-pointer rounded-2xl border border-dashed border-gray-200 bg-[#fafafa] p-6 text-center hover:border-[#dc2626] transition-colors">
-        <ImagePlus className="w-8 h-8 text-gray-400 mx-auto mb-3" />
+      <label
+        className={`block rounded-2xl border border-dashed bg-[#fafafa] p-6 text-center transition-colors ${
+          isUploading
+            ? "cursor-not-allowed border-gray-200 opacity-70"
+            : "cursor-pointer border-gray-200 hover:border-[#dc2626]"
+        }`}
+      >
+        {isUploading ? (
+          <LoaderCircle className="w-8 h-8 text-[#dc2626] mx-auto mb-3 animate-spin" />
+        ) : (
+          <ImagePlus className="w-8 h-8 text-gray-400 mx-auto mb-3" />
+        )}
 
         <span className="block text-sm font-semibold text-gray-700">
-          Selecionar imagens
+          {isUploading
+            ? "Enviando imagens..."
+            : "Selecionar imagens"}
         </span>
 
-        <span className="block text-xs text-gray-400 mt-1">JPG, PNG ou WebP</span>
+        <span className="block text-xs text-gray-400 mt-1">
+          JPG, PNG ou WebP — máximo de 10 MB por arquivo
+        </span>
 
         <input
           type="file"
           multiple
-          accept="image/*"
+          accept=".jpg,.jpeg,.png,.webp,image/jpeg,image/png,image/webp"
           onChange={handleImagesChange}
+          disabled={isUploading}
           className="hidden"
         />
       </label>
+
+      {uploadError && (
+        <div className="mt-4 rounded-xl border border-red-100 bg-red-50 px-4 py-3">
+          <p className="text-sm text-red-600">
+            {uploadError}
+          </p>
+        </div>
+      )}
 
       {images.length > 0 && (
         <div className="grid grid-cols-2 gap-3 mt-4">
@@ -83,7 +162,7 @@ export function ProductImages({ images, onImagesChange }: ProductImagesProps) {
               <img
                 src={image}
                 alt={`Imagem selecionada ${index + 1}`}
-                className="w-full h-full object-cover"
+                className="w-full h-full object-contain bg-white"
               />
 
               {index === 0 && (
@@ -95,7 +174,9 @@ export function ProductImages({ images, onImagesChange }: ProductImagesProps) {
               <button
                 type="button"
                 onClick={() => handleRemoveImage(index)}
-                className="absolute top-2 right-2 w-7 h-7 rounded-full bg-black/70 text-white text-xs flex items-center justify-center hover:bg-black transition-colors"
+                disabled={isUploading}
+                className="absolute top-2 right-2 w-7 h-7 rounded-full bg-black/70 text-white text-xs flex items-center justify-center hover:bg-black transition-colors disabled:opacity-50"
+                title="Remover imagem"
               >
                 ×
               </button>
@@ -104,7 +185,8 @@ export function ProductImages({ images, onImagesChange }: ProductImagesProps) {
                 <button
                   type="button"
                   onClick={() => handleSetCoverImage(index)}
-                  className="absolute bottom-2 left-2 right-2 rounded-lg bg-white/90 text-gray-800 text-[10px] font-bold px-2 py-1 hover:bg-white transition-colors"
+                  disabled={isUploading}
+                  className="absolute bottom-2 left-2 right-2 rounded-lg bg-white/90 text-gray-800 text-[10px] font-bold px-2 py-1 hover:bg-white transition-colors disabled:opacity-50"
                 >
                   Usar como capa
                 </button>

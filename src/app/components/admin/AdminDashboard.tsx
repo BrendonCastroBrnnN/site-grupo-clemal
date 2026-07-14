@@ -1,10 +1,37 @@
 import { FolderTree, Package, PackageCheck, PackageX } from "lucide-react";
+import { useEffect, useState } from "react";
 import { getAllCategories } from "../../services/categoriesService";
 import { getAllProducts } from "../../services/productsService";
+import type { Category, Product } from "../../types/product";
 
 export function AdminDashboard() {
-  const products = getAllProducts();
-  const categories = getAllCategories();
+  const [categories, setCategories] = useState<Category[]>([]);
+  const [products, setProducts] = useState<Product[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    async function loadDashboardData() {
+      setIsLoading(true);
+
+      try {
+        const [loadedProducts, loadedCategories] = await Promise.all([
+          getAllProducts(),
+          getAllCategories(),
+        ]);
+
+        setProducts(loadedProducts);
+        setCategories(loadedCategories);
+      } catch (error) {
+        console.error("Erro ao carregar dados do dashboard:", error);
+        setProducts([]);
+        setCategories([]);
+      } finally {
+        setIsLoading(false);
+      }
+    }
+
+    loadDashboardData();
+  }, []);
 
   const activeProducts = products.filter((product) => product.isActive);
   const inactiveProducts = products.filter((product) => !product.isActive);
@@ -12,25 +39,27 @@ export function AdminDashboard() {
   const cards = [
     {
       title: "Produtos cadastrados",
-      value: products.length,
+      value: isLoading ? "..." : products.length,
       description: "Total de produtos no catálogo",
       icon: Package,
     },
     {
       title: "Categorias",
-      value: categories.length,
-      description: "Categorias disponíveis no painel",
+      value: isLoading ? "..." : categories.length,
+      description: isLoading
+        ? "Carregando categorias"
+        : "Categorias disponíveis no painel",
       icon: FolderTree,
     },
     {
       title: "Produtos ativos",
-      value: activeProducts.length,
+      value: isLoading ? "..." : activeProducts.length,
       description: "Visíveis no site público",
       icon: PackageCheck,
     },
     {
       title: "Produtos inativos",
-      value: inactiveProducts.length,
+      value: isLoading ? "..." : inactiveProducts.length,
       description: "Ocultos do site público",
       icon: PackageX,
     },
@@ -63,7 +92,9 @@ export function AdminDashboard() {
         <div className="bg-white rounded-3xl border border-gray-100 p-6">
           <h2 className="font-bold text-gray-900 mb-4">Últimos produtos</h2>
 
-          {products.length > 0 ? (
+          {isLoading ? (
+            <p className="text-sm text-gray-500">Carregando produtos...</p>
+          ) : products.length > 0 ? (
             <div className="space-y-3">
               {products.slice(0, 5).map((product) => (
                 <div
@@ -76,11 +107,10 @@ export function AdminDashboard() {
                   </div>
 
                   <span
-                    className={`text-xs font-semibold px-3 py-1 rounded-full ${
-                      product.isActive
-                        ? "text-emerald-600 bg-emerald-50"
-                        : "text-gray-500 bg-gray-100"
-                    }`}
+                    className={`text-xs font-semibold px-3 py-1 rounded-full ${product.isActive
+                      ? "text-emerald-600 bg-emerald-50"
+                      : "text-gray-500 bg-gray-100"
+                      }`}
                   >
                     {product.isActive ? "Ativo" : "Inativo"}
                   </span>
@@ -95,7 +125,9 @@ export function AdminDashboard() {
         <div className="bg-white rounded-3xl border border-gray-100 p-6">
           <h2 className="font-bold text-gray-900 mb-4">Categorias</h2>
 
-          {categories.length > 0 ? (
+          {isLoading ? (
+            <p className="text-sm text-gray-500">Carregando categorias...</p>
+          ) : categories.length > 0 ? (
             <div className="space-y-3">
               {categories.slice(0, 5).map((category) => (
                 <div
@@ -108,11 +140,10 @@ export function AdminDashboard() {
                   </div>
 
                   <span
-                    className={`text-xs font-semibold px-3 py-1 rounded-full ${
-                      category.isActive
-                        ? "text-emerald-600 bg-emerald-50"
-                        : "text-gray-500 bg-gray-100"
-                    }`}
+                    className={`text-xs font-semibold px-3 py-1 rounded-full ${category.isActive
+                      ? "text-emerald-600 bg-emerald-50"
+                      : "text-gray-500 bg-gray-100"
+                      }`}
                   >
                     {category.isActive ? "Ativa" : "Inativa"}
                   </span>

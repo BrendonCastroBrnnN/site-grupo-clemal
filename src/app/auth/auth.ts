@@ -1,7 +1,7 @@
 const ADMIN_AUTH_KEY = "grupo-clemal-admin-auth";
 
 const TEMP_ADMIN_USER = "admin";
-const TEMP_ADMIN_PASSWORD = "GrupoClemal@2026";
+const TEMP_ADMIN_PASSWORD = "GrupoClemal2026@";
 
 export function loginAdmin(username: string, password: string): boolean {
   const isValid =

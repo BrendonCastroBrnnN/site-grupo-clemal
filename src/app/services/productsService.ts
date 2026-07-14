@@ -1,8 +1,6 @@
+import { supabase } from "../lib/supabase";
 import type { Product, ProductFormData } from "../types/product";
 import { getCategoryBySlug } from "./categoriesService";
-
-
-const STORAGE_KEY = "grupo-clemal-products";
 
 function generateSlug(value: string): string {
     return value
@@ -14,136 +12,217 @@ function generateSlug(value: string): string {
         .replace(/\s+/g, "-");
 }
 
-function loadProducts(): Product[] {
-    const stored = localStorage.getItem(STORAGE_KEY);
+function mapProductFromDatabase(product: any): Product {
+    return {
+        id: product.id,
+        name: product.name,
+        slug: product.slug,
+        category: product.category,
+        categorySlug: product.category_slug,
+        description: product.description,
+        images: product.images || [],
+        features: product.features || [],
+        isActive: product.is_active,
+        order: product.display_order,
+        createdAt: product.created_at,
+        updatedAt: product.updated_at,
+    };
+}
 
-    if (!stored) return [];
+export async function getProducts(): Promise<Product[]> {
+    const { data, error } = await supabase
+        .from("products")
+        .select("*")
+        .eq("is_active", true)
+        .order("display_order", { ascending: true });
 
-    try {
-        return JSON.parse(stored) as Product[];
-    } catch {
+    if (error) {
+        console.error("Erro ao buscar produtos:", error);
         return [];
+    }
+
+    return (data || []).map(mapProductFromDatabase);
+}
+
+export async function getAllProducts(): Promise<Product[]> {
+    const { data, error } = await supabase
+        .from("products")
+        .select("*")
+        .order("display_order", { ascending: true });
+
+    if (error) {
+        console.error("Erro ao buscar todos os produtos:", error);
+        return [];
+    }
+
+    return (data || []).map(mapProductFromDatabase);
+}
+
+export async function getProductBySlug(
+    slug: string
+): Promise<Product | undefined> {
+    const { data, error } = await supabase
+        .from("products")
+        .select("*")
+        .eq("slug", slug)
+        .eq("is_active", true)
+        .single();
+
+    if (error) {
+        return undefined;
+    }
+
+    return mapProductFromDatabase(data);
+}
+
+export async function getProductsByCategory(
+    categorySlug: string
+): Promise<Product[]> {
+    const { data, error } = await supabase
+        .from("products")
+        .select("*")
+        .eq("category_slug", categorySlug)
+        .eq("is_active", true)
+        .order("display_order", { ascending: true });
+
+    if (error) {
+        console.error("Erro ao buscar produtos da categoria:", error);
+        return [];
+    }
+
+    return (data || []).map(mapProductFromDatabase);
+}
+
+export async function getRelatedProducts(
+    product: Product,
+    limit = 4
+): Promise<Product[]> {
+    const { data, error } = await supabase
+        .from("products")
+        .select("*")
+        .eq("category_slug", product.categorySlug)
+        .eq("is_active", true)
+        .neq("id", product.id)
+        .order("display_order", { ascending: true })
+        .limit(limit);
+
+    if (error) {
+        console.error("Erro ao buscar produtos relacionados:", error);
+        return [];
+    }
+
+    return (data || []).map(mapProductFromDatabase);
+}
+
+export async function createProduct(
+    data: ProductFormData
+): Promise<Product | undefined> {
+    const products = await getAllProducts();
+    const category = await getCategoryBySlug(data.categorySlug);
+
+    const { data: createdProduct, error } = await supabase
+        .from("products")
+        .insert({
+            name: data.name.trim(),
+            slug: generateSlug(data.name),
+            category: category?.name || data.categorySlug,
+            category_slug: data.categorySlug,
+            description: data.description.trim(),
+            images: data.images,
+            features: data.features,
+            is_active: data.isActive,
+            display_order: products.length + 1,
+        })
+        .select()
+        .single();
+
+    if (error) {
+        console.error("Erro ao criar produto:", error);
+        return undefined;
+    }
+
+    return mapProductFromDatabase(createdProduct);
+}
+
+export async function deleteProduct(productId: string): Promise<void> {
+    const { error } = await supabase
+        .from("products")
+        .delete()
+        .eq("id", productId);
+
+    if (error) {
+        console.error("Erro ao excluir produto:", error);
     }
 }
 
-function saveProducts(products: Product[]) {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(products));
+export async function toggleProductStatus(
+    productId: string
+): Promise<void> {
+    const products = await getAllProducts();
+    const product = products.find((item) => item.id === productId);
+
+    if (!product) return;
+
+    const { error } = await supabase
+        .from("products")
+        .update({
+            is_active: !product.isActive,
+            updated_at: new Date().toISOString(),
+        })
+        .eq("id", productId);
+
+    if (error) {
+        console.error("Erro ao alterar status do produto:", error);
+    }
 }
 
-export function getProducts(): Product[] {
-    return loadProducts()
-        .filter((product) => product.isActive)
-        .sort((a, b) => (a.order || 0) - (b.order || 0));
+export async function updateProduct(
+    productId: string,
+    data: ProductFormData
+): Promise<Product | undefined> {
+    const category = await getCategoryBySlug(data.categorySlug);
+
+    const { data: updatedProduct, error } = await supabase
+        .from("products")
+        .update({
+            name: data.name.trim(),
+            slug: generateSlug(data.name),
+            category: category?.name || data.categorySlug,
+            category_slug: data.categorySlug,
+            description: data.description.trim(),
+            images: data.images,
+            features: data.features,
+            is_active: data.isActive,
+            updated_at: new Date().toISOString(),
+        })
+        .eq("id", productId)
+        .select()
+        .single();
+
+    if (error) {
+        console.error("Erro ao atualizar produto:", error);
+        return undefined;
+    }
+
+    return mapProductFromDatabase(updatedProduct);
 }
 
-export function getAllProducts(): Product[] {
-    return loadProducts().sort(
-        (a, b) => (a.order || 0) - (b.order || 0)
+export async function moveProduct(
+    productId: string,
+    direction: "up" | "down"
+): Promise<void> {
+    const products = await getAllProducts();
+
+    const currentIndex = products.findIndex(
+        (product) => product.id === productId
     );
-}
-
-export function getProductBySlug(slug: string): Product | undefined {
-    return getProducts().find((product) => product.slug === slug);
-}
-
-export function getProductsByCategory(categorySlug: string): Product[] {
-    return getProducts().filter((product) => product.categorySlug === categorySlug);
-}
-
-export function getRelatedProducts(product: Product, limit = 4): Product[] {
-    return getProducts()
-        .filter((item) => item.categorySlug === product.categorySlug && item.id !== product.id)
-        .slice(0, limit);
-}
-
-export function createProduct(data: ProductFormData): Product {
-    const products = loadProducts();
-
-    const category = getCategoryBySlug(data.categorySlug);
-
-    const product: Product = {
-        id: crypto.randomUUID(),
-        name: data.name,
-        slug: generateSlug(data.name),
-        category: category?.name || data.categorySlug,
-        categorySlug: data.categorySlug,
-        description: data.description,
-        images: data.images,
-        features: data.features,
-        isActive: data.isActive,
-
-        order: products.length + 1,
-
-        createdAt: new Date().toISOString(),
-    };
-
-    saveProducts([product, ...products]);
-
-    return product;
-}
-
-export function deleteProduct(productId: string): void {
-    const products = loadProducts();
-
-    const updatedProducts = products.filter((product) => product.id !== productId);
-
-    saveProducts(updatedProducts);
-}
-
-export function toggleProductStatus(productId: string): void {
-    const products = loadProducts();
-
-    const updatedProducts = products.map((product) =>
-        product.id === productId
-            ? {
-                ...product,
-                isActive: !product.isActive,
-                updatedAt: new Date().toISOString(),
-            }
-            : product
-    );
-
-    saveProducts(updatedProducts);
-}
-
-export function updateProduct(productId: string, data: ProductFormData): Product | undefined {
-    const products = loadProducts();
-    const existingProduct = products.find((product) => product.id === productId);
-
-    if (!existingProduct) return undefined;
-
-    const category = getCategoryBySlug(data.categorySlug);
-
-    const updatedProduct: Product = {
-        ...existingProduct,
-        name: data.name,
-        slug: generateSlug(data.name),
-        category: category?.name || data.categorySlug,
-        categorySlug: data.categorySlug,
-        description: data.description,
-        images: data.images,
-        features: data.features,
-        isActive: data.isActive,
-        updatedAt: new Date().toISOString(),
-    };
-
-    const updatedProducts = products.map((product) =>
-        product.id === productId ? updatedProduct : product
-    );
-
-    saveProducts(updatedProducts);
-
-    return updatedProduct;
-}
-
-export function moveProduct(productId: string, direction: "up" | "down"): void {
-    const products = loadProducts().sort((a, b) => (a.order || 0) - (b.order || 0));
-
-    const currentIndex = products.findIndex((product) => product.id === productId);
 
     if (currentIndex === -1) return;
 
-    const targetIndex = direction === "up" ? currentIndex - 1 : currentIndex + 1;
+    const targetIndex =
+        direction === "up"
+            ? currentIndex - 1
+            : currentIndex + 1;
 
     if (targetIndex < 0 || targetIndex >= products.length) return;
 
@@ -155,11 +234,24 @@ export function moveProduct(productId: string, direction: "up" | "down"): void {
     updatedProducts[currentIndex] = targetProduct;
     updatedProducts[targetIndex] = currentProduct;
 
-    const reorderedProducts = updatedProducts.map((product, index) => ({
-        ...product,
-        order: index + 1,
-        updatedAt: new Date().toISOString(),
-    }));
+    const updates = updatedProducts.map((product, index) =>
+        supabase
+            .from("products")
+            .update({
+                display_order: index + 1,
+                updated_at: new Date().toISOString(),
+            })
+            .eq("id", product.id)
+    );
 
-    saveProducts(reorderedProducts);
+    const results = await Promise.all(updates);
+
+    const failedUpdate = results.find((result) => result.error);
+
+    if (failedUpdate?.error) {
+        console.error(
+            "Erro ao reordenar produtos:",
+            failedUpdate.error
+        );
+    }
 }

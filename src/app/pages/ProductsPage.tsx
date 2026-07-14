@@ -1,45 +1,94 @@
-import { Search, PackageOpen } from "lucide-react";
-import { useMemo, useState } from "react";
+import { PackageOpen, Search } from "lucide-react";
+import { useEffect, useMemo, useState } from "react";
 import { ProductCard } from "../components/ProductCard";
 import { getCategories } from "../services/categoriesService";
 import { getProducts } from "../services/productsService";
+import type { Category, Product } from "../types/product";
 
 interface ProductsPageProps {
-  onNavigate: (page: string, params?: Record<string, string>) => void;
+  onNavigate: (
+    page: string,
+    params?: Record<string, string>
+  ) => void;
   initialCategory?: string;
 }
 
-export function ProductsPage({ onNavigate, initialCategory }: ProductsPageProps) {
-  const [selectedCategory, setSelectedCategory] = useState(initialCategory || "all");
+export function ProductsPage({
+  onNavigate,
+  initialCategory,
+}: ProductsPageProps) {
+  const [selectedCategory, setSelectedCategory] = useState(
+    initialCategory || "all"
+  );
+
   const [searchTerm, setSearchTerm] = useState("");
 
-  const categories = getCategories();
-  const products = getProducts();
+  const [categories, setCategories] = useState<Category[]>([]);
+  const [products, setProducts] = useState<Product[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [loadError, setLoadError] = useState("");
+
+  useEffect(() => {
+    setSelectedCategory(initialCategory || "all");
+  }, [initialCategory]);
+
+  useEffect(() => {
+    async function loadCatalog() {
+      setIsLoading(true);
+      setLoadError("");
+
+      try {
+        const [loadedCategories, loadedProducts] = await Promise.all([
+          getCategories(),
+          getProducts(),
+        ]);
+
+        setCategories(loadedCategories);
+        setProducts(loadedProducts);
+      } catch (error) {
+        console.error("Erro ao carregar catálogo:", error);
+
+        setCategories([]);
+        setProducts([]);
+        setLoadError("Não foi possível carregar o catálogo.");
+      } finally {
+        setIsLoading(false);
+      }
+    }
+
+    loadCatalog();
+  }, []);
 
   const filteredProducts = useMemo(() => {
+    const normalizedTerm = searchTerm.trim().toLowerCase();
+
     return products.filter((product) => {
       const matchesCategory =
-        selectedCategory === "all" || product.categorySlug === selectedCategory;
-
-      const term = searchTerm.trim().toLowerCase();
+        selectedCategory === "all" ||
+        product.categorySlug === selectedCategory;
 
       const matchesSearch =
-        term.length === 0 ||
-        product.name.toLowerCase().includes(term) ||
-        product.description.toLowerCase().includes(term) ||
-        product.category.toLowerCase().includes(term);
+        normalizedTerm.length === 0 ||
+        product.name.toLowerCase().includes(normalizedTerm) ||
+        product.description.toLowerCase().includes(normalizedTerm) ||
+        product.category.toLowerCase().includes(normalizedTerm);
 
-      return matchesCategory && matchesSearch && product.isActive;
+      return matchesCategory && matchesSearch;
     });
-  }, [selectedCategory, searchTerm]);
+  }, [products, selectedCategory, searchTerm]);
 
   const selectedCategoryName =
     selectedCategory === "all"
       ? "Todos os produtos"
-      : categories.find((category) => category.slug === selectedCategory)?.name || "Categoria";
+      : categories.find(
+          (category) => category.slug === selectedCategory
+        )?.name || "Categoria";
 
   return (
-    <main className="min-h-screen bg-white" style={{ fontFamily: "'Inter', sans-serif" }}>
+    <main
+      className="min-h-screen bg-white"
+      style={{ fontFamily: "'Inter', sans-serif" }}
+    >
       <section className="bg-[#111111] text-white">
         <div className="max-w-7xl mx-auto px-6 py-16">
           <p className="text-xs font-bold uppercase tracking-[0.25em] text-[#dc2626] mb-3">
@@ -60,8 +109,9 @@ export function ProductsPage({ onNavigate, initialCategory }: ProductsPageProps)
           </h1>
 
           <p className="max-w-2xl text-gray-300 mt-5 leading-relaxed">
-            Consulte bainhas, bolsas técnicas, capas de proteção e soluções sob medida fabricadas
-            para uso profissional, com foco em resistência, acabamento e durabilidade.
+            Consulte bainhas, bolsas técnicas, capas de proteção e soluções
+            sob medida fabricadas para uso profissional, com foco em
+            resistência, acabamento e durabilidade.
           </p>
         </div>
       </section>
@@ -70,36 +120,48 @@ export function ProductsPage({ onNavigate, initialCategory }: ProductsPageProps)
         <div className="grid grid-cols-1 lg:grid-cols-[280px_1fr] gap-8">
           <aside className="lg:sticky lg:top-24 h-fit">
             <div className="border border-gray-100 rounded-2xl p-5 bg-[#fafafa]">
-              <h2 className="font-bold text-gray-900 mb-4">Categorias</h2>
+              <h2 className="font-bold text-gray-900 mb-4">
+                Categorias
+              </h2>
 
               <div className="space-y-2">
                 <button
+                  type="button"
                   onClick={() => setSelectedCategory("all")}
-                  className={`w-full text-left px-4 py-3 rounded-xl text-sm font-semibold transition-colors ${selectedCategory === "all"
+                  disabled={isLoading}
+                  className={`w-full text-left px-4 py-3 rounded-xl text-sm font-semibold transition-colors disabled:opacity-60 ${
+                    selectedCategory === "all"
                       ? "bg-[#111111] text-white"
                       : "bg-white text-gray-600 hover:text-gray-900 border border-gray-100"
-                    }`}
+                  }`}
                 >
                   Todos os produtos
                 </button>
 
-                {categories.length > 0 ? (
+                {isLoading ? (
+                  <p className="text-sm text-gray-400 leading-relaxed px-1 pt-2">
+                    Carregando categorias...
+                  </p>
+                ) : categories.length > 0 ? (
                   categories.map((category) => (
                     <button
                       key={category.id}
-                      onClick={() => setSelectedCategory(category.slug)}
-                      className={`w-full text-left px-4 py-3 rounded-xl text-sm font-semibold transition-colors ${selectedCategory === category.slug
+                      type="button"
+                      onClick={() =>
+                        setSelectedCategory(category.slug)
+                      }
+                      className={`w-full text-left px-4 py-3 rounded-xl text-sm font-semibold transition-colors ${
+                        selectedCategory === category.slug
                           ? "bg-[#111111] text-white"
                           : "bg-white text-gray-600 hover:text-gray-900 border border-gray-100"
-                        }`}
+                      }`}
                     >
                       {category.name}
                     </button>
                   ))
                 ) : (
                   <p className="text-sm text-gray-400 leading-relaxed px-1 pt-2">
-                    As categorias serão exibidas aqui conforme forem cadastradas no painel
-                    administrativo.
+                    Nenhuma categoria disponível no momento.
                   </p>
                 )}
               </div>
@@ -112,6 +174,7 @@ export function ProductsPage({ onNavigate, initialCategory }: ProductsPageProps)
                 <p className="text-xs font-semibold text-[#dc2626] uppercase tracking-wider mb-2">
                   Produtos
                 </p>
+
                 <h2
                   style={{
                     fontFamily: "'Barlow Condensed', sans-serif",
@@ -127,19 +190,45 @@ export function ProductsPage({ onNavigate, initialCategory }: ProductsPageProps)
 
               <div className="relative w-full md:w-[320px]">
                 <Search className="w-4 h-4 text-gray-400 absolute left-4 top-1/2 -translate-y-1/2" />
+
                 <input
                   value={searchTerm}
-                  onChange={(event) => setSearchTerm(event.target.value)}
+                  onChange={(event) =>
+                    setSearchTerm(event.target.value)
+                  }
+                  disabled={isLoading}
                   placeholder="Buscar produto..."
-                  className="w-full pl-11 pr-4 py-3 rounded-xl border border-gray-200 text-sm outline-none focus:border-[#dc2626]"
+                  className="w-full pl-11 pr-4 py-3 rounded-xl border border-gray-200 text-sm outline-none focus:border-[#dc2626] disabled:opacity-60"
                 />
               </div>
             </div>
 
-            {filteredProducts.length > 0 ? (
+            {isLoading ? (
+              <div className="min-h-[360px] border border-dashed border-gray-200 rounded-3xl bg-[#fafafa] flex items-center justify-center px-6">
+                <p className="text-sm text-gray-500">
+                  Carregando produtos...
+                </p>
+              </div>
+            ) : loadError ? (
+              <div className="min-h-[360px] border border-red-100 rounded-3xl bg-red-50 flex flex-col items-center justify-center text-center px-6">
+                <PackageOpen className="w-7 h-7 text-red-400 mb-4" />
+
+                <h3 className="font-bold text-red-700 text-lg mb-2">
+                  Erro ao carregar o catálogo
+                </h3>
+
+                <p className="max-w-md text-sm text-red-600">
+                  {loadError}
+                </p>
+              </div>
+            ) : filteredProducts.length > 0 ? (
               <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-6">
                 {filteredProducts.map((product) => (
-                  <ProductCard key={product.id} product={product} onNavigate={onNavigate} />
+                  <ProductCard
+                    key={product.id}
+                    product={product}
+                    onNavigate={onNavigate}
+                  />
                 ))}
               </div>
             ) : (
@@ -149,12 +238,12 @@ export function ProductsPage({ onNavigate, initialCategory }: ProductsPageProps)
                 </div>
 
                 <h3 className="font-bold text-gray-900 text-lg mb-2">
-                  Nenhum produto cadastrado ainda
+                  Nenhum produto encontrado
                 </h3>
 
                 <p className="max-w-md text-sm text-gray-500 leading-relaxed">
-                  Esta área será preenchida automaticamente quando os produtos forem cadastrados
-                  no painel administrativo.
+                  Não há produtos ativos correspondentes à categoria ou à
+                  pesquisa selecionada.
                 </p>
               </div>
             )}
