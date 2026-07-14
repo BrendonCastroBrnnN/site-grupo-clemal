@@ -5,6 +5,9 @@ import { uploadProductImage } from "../../../services/productImagesService";
 interface ProductImagesProps {
   images: string[];
   onImagesChange: (images: string[]) => void;
+  onImagesUploaded?: (imageUrls: string[]) => void;
+  onImageRemoved?: (imageUrl: string) => void;
+  onUploadStateChange?: (isUploading: boolean) => void;
 }
 
 const MAX_FILE_SIZE = 10 * 1024 * 1024;
@@ -18,6 +21,9 @@ const ALLOWED_IMAGE_TYPES = [
 export function ProductImages({
   images,
   onImagesChange,
+  onImagesUploaded,
+  onImageRemoved,
+  onUploadStateChange,
 }: ProductImagesProps) {
   const [isUploading, setIsUploading] = useState(false);
   const [uploadError, setUploadError] = useState("");
@@ -54,6 +60,7 @@ export function ProductImages({
     }
 
     setIsUploading(true);
+    onUploadStateChange?.(true);
     setUploadError("");
 
     try {
@@ -61,6 +68,7 @@ export function ProductImages({
         files.map((file) => uploadProductImage(file))
       );
 
+      onImagesUploaded?.(uploadedImages);
       onImagesChange([...images, ...uploadedImages]);
     } catch (error) {
       console.error("Erro ao enviar imagens:", error);
@@ -72,10 +80,17 @@ export function ProductImages({
       );
     } finally {
       setIsUploading(false);
+      onUploadStateChange?.(false);
     }
   }
 
   function handleRemoveImage(index: number) {
+    const removedImage = images[index];
+
+    if (!removedImage) return;
+
+    onImageRemoved?.(removedImage);
+
     onImagesChange(
       images.filter((_, imageIndex) => imageIndex !== index)
     );
@@ -112,11 +127,10 @@ export function ProductImages({
       </div>
 
       <label
-        className={`block rounded-2xl border border-dashed bg-[#fafafa] p-6 text-center transition-colors ${
-          isUploading
-            ? "cursor-not-allowed border-gray-200 opacity-70"
-            : "cursor-pointer border-gray-200 hover:border-[#dc2626]"
-        }`}
+        className={`block rounded-2xl border border-dashed bg-[#fafafa] p-6 text-center transition-colors ${isUploading
+          ? "cursor-not-allowed border-gray-200 opacity-70"
+          : "cursor-pointer border-gray-200 hover:border-[#dc2626]"
+          }`}
       >
         {isUploading ? (
           <LoaderCircle className="w-8 h-8 text-[#dc2626] mx-auto mb-3 animate-spin" />

@@ -126,7 +126,7 @@ export function AdminPage({ onNavigate }: AdminPageProps) {
                         </nav>
                     </aside>
 
-                    <div>{renderSection()}</div>
+                    <div key={activeSection}>{renderSection()}</div>
                 </div>
             </section>
         </main>

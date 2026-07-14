@@ -2,10 +2,15 @@ import { Save } from "lucide-react";
 
 interface ProductPublishCardProps {
   isEditing: boolean;
+  isBusy?: boolean;
   onCancelEdit?: () => void;
 }
 
-export function ProductPublishCard({ isEditing, onCancelEdit }: ProductPublishCardProps) {
+export function ProductPublishCard({
+  isEditing,
+  isBusy = false,
+  onCancelEdit,
+}: ProductPublishCardProps) {
   return (
     <div className="bg-white rounded-3xl border border-gray-100 p-6">
       <h2 className="font-bold text-gray-900 mb-2">Publicação</h2>
@@ -19,7 +24,8 @@ export function ProductPublishCard({ isEditing, onCancelEdit }: ProductPublishCa
         <button
           type="button"
           onClick={onCancelEdit}
-          className="w-full mb-3 inline-flex items-center justify-center gap-2 border border-gray-200 text-gray-700 font-semibold py-3 rounded-xl hover:border-gray-400 transition-colors"
+          disabled={isBusy}
+          className="w-full mb-3 inline-flex items-center justify-center gap-2 border border-gray-200 text-gray-700 font-semibold py-3 rounded-xl hover:border-gray-400 transition-colors disabled:opacity-60 disabled:cursor-not-allowed"
         >
           Cancelar edição
         </button>
@@ -27,10 +33,16 @@ export function ProductPublishCard({ isEditing, onCancelEdit }: ProductPublishCa
 
       <button
         type="submit"
-        className="w-full inline-flex items-center justify-center gap-2 bg-[#dc2626] hover:bg-[#b91c1c] text-white font-bold py-4 rounded-xl transition-colors"
+        disabled={isBusy}
+        className="w-full inline-flex items-center justify-center gap-2 bg-[#dc2626] hover:bg-[#b91c1c] text-white font-bold py-4 rounded-xl transition-colors disabled:opacity-60 disabled:cursor-not-allowed"
       >
         <Save className="w-5 h-5" />
-        {isEditing ? "Atualizar produto" : "Salvar produto"}
+
+        {isBusy
+          ? "Aguarde..."
+          : isEditing
+            ? "Atualizar produto"
+            : "Salvar produto"}
       </button>
     </div>
   );

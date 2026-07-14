@@ -1,7 +1,11 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import type { Category, Product, ProductFormData } from "../../types/product";
 import { getCategories } from "../../services/categoriesService";
 import { createProduct, updateProduct } from "../../services/productsService";
+import {
+    deleteProductImage,
+    deleteProductImages,
+} from "../../services/productImagesService";
 import { ProductPublishCard } from "./product-form/ProductPublishCard";
 import { ProductImages } from "./product-form/ProductImages";
 import { ProductFeatures } from "./product-form/ProductFeatures";
@@ -42,6 +46,9 @@ export function ProductForm({
     const [featureText, setFeatureText] = useState("");
     const [categories, setCategories] = useState<Category[]>([]);
     const [isLoadingCategories, setIsLoadingCategories] = useState(true);
+    const uploadedImagesRef = useRef<string[]>([]);
+    const [isUploadingImages, setIsUploadingImages] = useState(false);
+    const [isCleaningImages, setIsCleaningImages] = useState(false);
 
     useEffect(() => {
         async function loadCategories() {
@@ -62,6 +69,25 @@ export function ProductForm({
     }, []);
 
     useEffect(() => {
+        return () => {
+            const abandonedImages = [...uploadedImagesRef.current];
+
+            uploadedImagesRef.current = [];
+
+            if (abandonedImages.length > 0) {
+                void deleteProductImages(abandonedImages).catch((error) => {
+                    console.error(
+                        "Erro ao limpar imagens abandonadas:",
+                        error
+                    );
+                });
+            }
+        };
+    }, []);
+
+    useEffect(() => {
+        uploadedImagesRef.current = [];
+
         if (productToEdit) {
             setFormData({
                 name: productToEdit.name,
@@ -108,8 +134,76 @@ export function ProductForm({
         }));
     }
 
+    function handleImagesUploaded(imageUrls: string[]) {
+        uploadedImagesRef.current = [
+            ...uploadedImagesRef.current,
+            ...imageUrls,
+        ];
+    }
+
+    async function handleImageRemoved(imageUrl: string) {
+        const isNewUpload =
+            uploadedImagesRef.current.includes(imageUrl);
+
+        if (!isNewUpload) return;
+
+        try {
+            await deleteProductImage(imageUrl);
+
+            uploadedImagesRef.current =
+                uploadedImagesRef.current.filter(
+                    (uploadedImage) => uploadedImage !== imageUrl
+                );
+        } catch (error) {
+            console.error(
+                "Erro ao remover imagem recém-enviada:",
+                error
+            );
+        }
+    }
+
+    async function handleCancelEdit() {
+        setIsCleaningImages(true);
+
+        try {
+            await deleteProductImages(uploadedImagesRef.current);
+            uploadedImagesRef.current = [];
+        } catch (error) {
+            console.error(
+                "Erro ao limpar imagens não utilizadas:",
+                error
+            );
+
+            alert(
+                "Não foi possível remover todas as imagens enviadas nesta edição."
+            );
+        } finally {
+            setIsCleaningImages(false);
+        }
+
+        setFormData(
+            productToEdit
+                ? {
+                    name: productToEdit.name,
+                    categorySlug: productToEdit.categorySlug,
+                    description: productToEdit.description,
+                    images: productToEdit.images,
+                    features: productToEdit.features,
+                    isActive: productToEdit.isActive,
+                }
+                : initialFormData
+        );
+
+        setFeatureText("");
+        onCancelEdit?.();
+    }
+
     async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
         event.preventDefault();
+
+        if (isUploadingImages || isCleaningImages) {
+            return;
+        }
 
         if (!formData.name.trim()) {
             alert("Informe o nome do produto.");
@@ -154,6 +248,7 @@ export function ProductForm({
                 alert("Produto cadastrado com sucesso.");
             }
 
+            uploadedImagesRef.current = [];
             setFormData(initialFormData);
             setFeatureText("");
             onProductSaved?.();
@@ -193,11 +288,17 @@ export function ProductForm({
                             images,
                         }))
                     }
+                    onImagesUploaded={handleImagesUploaded}
+                    onImageRemoved={(imageUrl) =>
+                        void handleImageRemoved(imageUrl)
+                    }
+                    onUploadStateChange={setIsUploadingImages}
                 />
 
                 <ProductPublishCard
                     isEditing={Boolean(productToEdit)}
-                    onCancelEdit={onCancelEdit}
+                    isBusy={isUploadingImages || isCleaningImages}
+                    onCancelEdit={() => void handleCancelEdit()}
                 />
             </aside>
         </form>
