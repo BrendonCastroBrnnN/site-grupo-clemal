@@ -26,7 +26,17 @@ const menuItems: {
 export function AdminPage({ onNavigate }: AdminPageProps) {
     const [activeSection, setActiveSection] = useState<AdminSection>("dashboard");
 
-    const { isAuthenticated, login, logout } = useAdminAuth();
+    const { isAuthenticated, isLoadingAuth, login, logout } = useAdminAuth();
+
+    if (isLoadingAuth) {
+        return (
+            <main className="min-h-screen bg-[#f6f6f6] flex items-center justify-center">
+                <p className="text-sm text-gray-500">
+                    Verificando acesso...
+                </p>
+            </main>
+        );
+    }
 
     if (!isAuthenticated) {
         return <AdminLogin onLogin={login} />;
@@ -82,7 +92,7 @@ export function AdminPage({ onNavigate }: AdminPageProps) {
                     </p>
                     <button
                         type="button"
-                        onClick={logout}
+                        onClick={() => void logout()}
                         className="mt-6 inline-flex items-center gap-2 rounded-xl border border-white/10 px-4 py-2 text-sm font-semibold text-white hover:bg-white/10 transition-colors"
                     >
                         <LogOut className="w-4 h-4" />

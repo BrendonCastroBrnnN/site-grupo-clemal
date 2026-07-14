@@ -1,23 +1,35 @@
-const ADMIN_AUTH_KEY = "grupo-clemal-admin-auth";
+import { supabase } from "../lib/supabase";
 
-const TEMP_ADMIN_USER = "admin";
-const TEMP_ADMIN_PASSWORD = "GrupoClemal2026@";
+export async function loginAdmin(
+  email: string,
+  password: string
+): Promise<boolean> {
+  const { error } = await supabase.auth.signInWithPassword({
+    email: email.trim(),
+    password,
+  });
 
-export function loginAdmin(username: string, password: string): boolean {
-  const isValid =
-    username.trim() === TEMP_ADMIN_USER &&
-    password === TEMP_ADMIN_PASSWORD;
+  if (error) {
+    console.error("Erro ao fazer login:", error.message);
+    return false;
+  }
 
-  if (!isValid) return false;
-
-  localStorage.setItem(ADMIN_AUTH_KEY, "true");
   return true;
 }
 
-export function logoutAdmin(): void {
-  localStorage.removeItem(ADMIN_AUTH_KEY);
+export async function logoutAdmin(): Promise<void> {
+  const { error } = await supabase.auth.signOut();
+
+  if (error) {
+    console.error("Erro ao fazer logout:", error.message);
+    throw error;
+  }
 }
 
-export function isAdminAuthenticated(): boolean {
-  return localStorage.getItem(ADMIN_AUTH_KEY) === "true";
+export async function isAdminAuthenticated(): Promise<boolean> {
+  const {
+    data: { session },
+  } = await supabase.auth.getSession();
+
+  return Boolean(session);
 }

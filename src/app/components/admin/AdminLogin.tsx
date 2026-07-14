@@ -2,25 +2,38 @@ import { LockKeyhole } from "lucide-react";
 import { useState } from "react";
 
 interface AdminLoginProps {
-  onLogin: (username: string, password: string) => boolean;
+  onLogin: (email: string, password: string) => Promise<boolean>;
 }
 
 export function AdminLogin({ onLogin }: AdminLoginProps) {
-  const [username, setUsername] = useState("admin");
+  const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
-  function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
+  async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
 
-    const success = onLogin(username, password);
-
-    if (!success) {
-      setError("Usuário ou senha inválidos.");
+    if (!email.trim() || !password) {
+      setError("Informe o usuário e a senha.");
       return;
     }
 
     setError("");
+    setIsSubmitting(true);
+
+    try {
+      const success = await onLogin(email, password);
+
+      if (!success) {
+        setError("Usuário ou senha inválidos.");
+      }
+    } catch (error) {
+      console.error("Erro ao realizar login:", error);
+      setError("Não foi possível realizar o login. Tente novamente.");
+    } finally {
+      setIsSubmitting(false);
+    }
   }
 
   return (
@@ -60,11 +73,14 @@ export function AdminLogin({ onLogin }: AdminLoginProps) {
             <label className="block text-sm font-semibold text-gray-700 mb-2">
               Usuário
             </label>
+
             <input
-              value={username}
-              onChange={(event) => setUsername(event.target.value)}
+              type="email"
+              value={email}
+              onChange={(event) => setEmail(event.target.value)}
               className="w-full rounded-xl border border-gray-200 px-4 py-3 text-sm outline-none focus:border-[#dc2626]"
               autoComplete="username"
+              disabled={isSubmitting}
             />
           </div>
 
@@ -72,12 +88,14 @@ export function AdminLogin({ onLogin }: AdminLoginProps) {
             <label className="block text-sm font-semibold text-gray-700 mb-2">
               Senha
             </label>
+
             <input
               type="password"
               value={password}
               onChange={(event) => setPassword(event.target.value)}
               className="w-full rounded-xl border border-gray-200 px-4 py-3 text-sm outline-none focus:border-[#dc2626]"
               autoComplete="current-password"
+              disabled={isSubmitting}
             />
           </div>
 
@@ -89,9 +107,10 @@ export function AdminLogin({ onLogin }: AdminLoginProps) {
 
           <button
             type="submit"
-            className="w-full rounded-xl bg-[#111111] text-white font-bold py-4 hover:bg-[#262626] transition-colors"
+            disabled={isSubmitting}
+            className="w-full rounded-xl bg-[#111111] text-white font-bold py-4 hover:bg-[#262626] transition-colors disabled:opacity-60 disabled:cursor-not-allowed"
           >
-            Entrar
+            {isSubmitting ? "Entrando..." : "Entrar"}
           </button>
         </div>
       </form>
