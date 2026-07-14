@@ -106,7 +106,7 @@ export function HomePage({ onNavigate }: HomePageProps) {
 
           {/* Left */}
           <div>
-            
+
             <h1 style={{
               fontFamily: "'Barlow Condensed', sans-serif",
               fontSize: "clamp(36px,4.5vw,62px)",
@@ -193,7 +193,7 @@ export function HomePage({ onNavigate }: HomePageProps) {
               <p className="text-xs text-gray-400 mb-1">Confiança dos nossos clientes</p>
               <div className="flex items-center gap-2">
                 <div className="flex gap-0.5">
-                  {[1,2,3,4,5].map(s => <Star key={s} className="w-4 h-4 text-amber-400 fill-amber-400" />)}
+                  {[1, 2, 3, 4, 5].map(s => <Star key={s} className="w-4 h-4 text-amber-400 fill-amber-400" />)}
                 </div>
                 <span className="font-black text-gray-900"
                   style={{ fontFamily: "'Barlow Condensed', sans-serif", fontSize: 20 }}>4.9</span>
@@ -518,7 +518,7 @@ export function HomePage({ onNavigate }: HomePageProps) {
                 className="bg-white rounded-2xl p-6 border border-gray-100 hover:shadow-lg transition-all duration-300"
               >
                 <div className="flex gap-0.5 mb-4">
-                  {[1,2,3,4,5].map(s => (
+                  {[1, 2, 3, 4, 5].map(s => (
                     <Star key={s} className="w-4 h-4 text-amber-400 fill-amber-400" />
                   ))}
                 </div>
@@ -623,13 +623,14 @@ export function HomePage({ onNavigate }: HomePageProps) {
           {/* Map */}
           <div className="rounded-3xl overflow-hidden border border-gray-100" style={{ minHeight: 220 }}>
             <iframe
-              src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3751.2!2d-44.05!3d-19.93!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zMTnCsDU1JzQ4LjAiUyA0NMKwMDMnMDAuMCJX!5e0!3m2!1spt!2sbr!4v1"
+              src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d1326.0877060684943!2d-44.039013562181886!3d-19.935255696033295!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0xa695bff5d76dbd%3A0x64d2f8713915001c!2sR.%20Ac%C3%A1cias%2C%202338%20-%20Eldorado%2C%20Contagem%20-%20MG%2C%2032025-035!5e0!3m2!1spt-BR!2sbr!4v1784070720155!5m2!1spt-BR!2sbr"
               width="100%"
-              height="100%"
-              style={{ border: 0, minHeight: 220 }}
+              height="450"
+              style={{ border: 0 }}
               allowFullScreen
               loading="lazy"
-              title="Localização Grupo Clemal — Contagem/MG"
+              referrerPolicy="strict-origin-when-cross-origin"
+              title="Localização do Grupo Clemal"
             />
           </div>
         </div>

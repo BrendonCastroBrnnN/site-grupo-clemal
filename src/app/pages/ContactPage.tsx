@@ -307,13 +307,14 @@ export function ContactPage() {
               className="mt-4 bg-white rounded-xl border border-gray-100 overflow-hidden"
             >
               <iframe
-                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3751.2!2d-44.05!3d-19.93!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zMTnCsDU1JzQ4LjAiUyA0NMKwMDMnMDAuMCJX!5e0!3m2!1spt!2sbr!4v1"
+                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d1326.0877060684943!2d-44.039013562181886!3d-19.935255696033295!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0xa695bff5d76dbd%3A0x64d2f8713915001c!2sR.%20Ac%C3%A1cias%2C%202338%20-%20Eldorado%2C%20Contagem%20-%20MG%2C%2032025-035!5e0!3m2!1spt-BR!2sbr!4v1784070720155!5m2!1spt-BR!2sbr"
                 width="100%"
-                height="250"
+                height="450"
                 style={{ border: 0 }}
                 allowFullScreen
                 loading="lazy"
-                title="Mapa Grupo Clemal"
+                referrerPolicy="strict-origin-when-cross-origin"
+                title="Localização do Grupo Clemal"
               />
             </div>
           </div>
