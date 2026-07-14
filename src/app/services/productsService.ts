@@ -1,6 +1,7 @@
 import { supabase } from "../lib/supabase";
 import type { Product, ProductFormData } from "../types/product";
 import { getCategoryBySlug } from "./categoriesService";
+import { deleteProductImages } from "./productImagesService";
 
 function generateSlug(value: string): string {
     return value
@@ -27,6 +28,23 @@ function mapProductFromDatabase(product: any): Product {
         createdAt: product.created_at,
         updatedAt: product.updated_at,
     };
+}
+
+async function getProductById(
+    productId: string
+): Promise<Product | undefined> {
+    const { data, error } = await supabase
+        .from("products")
+        .select("*")
+        .eq("id", productId)
+        .single();
+
+    if (error) {
+        console.error("Erro ao buscar produto pelo ID:", error);
+        return undefined;
+    }
+
+    return mapProductFromDatabase(data);
 }
 
 export async function getProducts(): Promise<Product[]> {
@@ -144,7 +162,15 @@ export async function createProduct(
     return mapProductFromDatabase(createdProduct);
 }
 
-export async function deleteProduct(productId: string): Promise<void> {
+export async function deleteProduct(
+    productId: string
+): Promise<void> {
+    const existingProduct = await getProductById(productId);
+
+    if (!existingProduct) {
+        throw new Error("Produto não encontrado.");
+    }
+
     const { error } = await supabase
         .from("products")
         .delete()
@@ -152,6 +178,16 @@ export async function deleteProduct(productId: string): Promise<void> {
 
     if (error) {
         console.error("Erro ao excluir produto:", error);
+        throw new Error(`Erro ao excluir produto: ${error.message}`);
+    }
+
+    try {
+        await deleteProductImages(existingProduct.images);
+    } catch (cleanupError) {
+        console.warn(
+            "Produto excluído, mas algumas imagens não foram removidas do Storage:",
+            cleanupError
+        );
     }
 }
 
@@ -180,14 +216,24 @@ export async function updateProduct(
     productId: string,
     data: ProductFormData
 ): Promise<Product | undefined> {
-    const category = await getCategoryBySlug(data.categorySlug);
+    const existingProduct = await getProductById(productId);
+
+    if (!existingProduct) {
+        console.error("Produto não encontrado para atualização.");
+        return undefined;
+    }
+
+    const category = await getCategoryBySlug(
+        data.categorySlug
+    );
 
     const { data: updatedProduct, error } = await supabase
         .from("products")
         .update({
             name: data.name.trim(),
             slug: generateSlug(data.name),
-            category: category?.name || data.categorySlug,
+            category:
+                category?.name || data.categorySlug,
             category_slug: data.categorySlug,
             description: data.description.trim(),
             images: data.images,
@@ -202,6 +248,21 @@ export async function updateProduct(
     if (error) {
         console.error("Erro ao atualizar produto:", error);
         return undefined;
+    }
+
+    const removedImages = existingProduct.images.filter(
+        (oldImage) => !data.images.includes(oldImage)
+    );
+
+    if (removedImages.length > 0) {
+        try {
+            await deleteProductImages(removedImages);
+        } catch (cleanupError) {
+            console.warn(
+                "Produto atualizado, mas algumas imagens antigas não foram removidas:",
+                cleanupError
+            );
+        }
     }
 
     return mapProductFromDatabase(updatedProduct);

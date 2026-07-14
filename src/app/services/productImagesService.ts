@@ -59,6 +59,30 @@ export async function deleteProductImage(imageUrl: string): Promise<void> {
     }
 }
 
+export async function deleteProductImages(
+    imageUrls: string[]
+): Promise<void> {
+    const supabaseImages = imageUrls.filter(isSupabaseProductImage);
+
+    if (supabaseImages.length === 0) return;
+
+    const results = await Promise.allSettled(
+        supabaseImages.map((imageUrl) =>
+            deleteProductImage(imageUrl)
+        )
+    );
+
+    const failedResults = results.filter(
+        (result) => result.status === "rejected"
+    );
+
+    if (failedResults.length > 0) {
+        throw new Error(
+            `Não foi possível remover ${failedResults.length} imagem(ns) do Storage.`
+        );
+    }
+}
+
 export function isSupabaseProductImage(imageUrl: string): boolean {
     return imageUrl.includes(
         `/storage/v1/object/public/${BUCKET_NAME}/`
