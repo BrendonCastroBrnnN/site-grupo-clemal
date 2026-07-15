@@ -173,7 +173,7 @@ export function LicitacoesPage({ onNavigate }: LicitacoesPageProps) {
                   "EPIs e acessórios de proteção",
                   "Bolsas e mochilas para equipes de campo",
                   "Malotes e portavalores com lacre",
-                  "Capas para coletores de dados e tablets",
+                  "Capa para coletor de dados e impressoras de todas as marcas",
                   "Bainhas e porta-ferramentas",
                   "Bonés e chapéus corporativos",
                   "Projetos personalizados sob edital",

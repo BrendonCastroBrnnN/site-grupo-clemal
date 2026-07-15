@@ -184,7 +184,7 @@ export function CustomPage() {
             <div className="space-y-3 mb-6">
               {[
                 "Bolsas e mochilas corporativas com logo da empresa",
-                "Malotes personalizados para bancos e transportadoras",
+                "Malotes personalizados para instituições que buscam eficiência e segurança",
                 "Capas protetoras para equipamentos específicos",
                 "Bainhas e porta-ferramentas sob medida",
                 "Bonés e chapéus corporativos bordados",

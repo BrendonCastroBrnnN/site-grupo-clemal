@@ -159,14 +159,28 @@ export function ProductsPage({
                       {category.name}
                     </button>
                   ))
-                ) : (
+                                ) : (
                   <p className="text-sm text-gray-400 leading-relaxed px-1 pt-2">
                     Nenhuma categoria disponível no momento.
                   </p>
                 )}
               </div>
+
+              <div className="mt-5 pt-5 border-t border-gray-200">
+                <button
+                  type="button"
+                  onClick={() => onNavigate("custom")}
+                  className="w-full rounded-xl bg-[#dc2626] px-4 py-3 text-sm font-bold text-white hover:bg-[#b91c1c] transition-colors"
+                >
+                  Projetos personalizados
+                </button>
+
+                <p className="mt-2 px-1 text-xs leading-relaxed text-gray-400">
+                  Desenvolvemos produtos sob medida para sua empresa.
+                </p>
+              </div>
             </div>
-          </aside>
+          </aside>          
 
           <div>
             <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-5 mb-8">

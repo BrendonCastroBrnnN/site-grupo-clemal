@@ -62,25 +62,6 @@ export function Footer({ onNavigate }: FooterProps) {
                 </a>
               ))}
             </div>
-
-            {/* Trust seals */}
-            <div className="flex flex-wrap gap-2">
-              {["Fabricante Nacional", "NF-e Emitida", "Atende Licitações"].map(seal => (
-                <span
-                  key={seal}
-                  className="text-[10px] font-semibold px-2.5 py-1.5 rounded-lg flex items-center gap-1.5"
-                  style={{
-                    color: "rgba(255,255,255,0.4)",
-                    background: "rgba(255,255,255,0.05)",
-                    border: "1px solid rgba(255,255,255,0.08)",
-                    fontFamily: "'Inter', sans-serif",
-                  }}
-                >
-                  <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 inline-block" />
-                  {seal}
-                </span>
-              ))}
-            </div>
           </div>
 
           {/* Institucional */}

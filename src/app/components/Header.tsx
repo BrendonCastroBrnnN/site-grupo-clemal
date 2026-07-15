@@ -9,9 +9,7 @@ interface HeaderProps {
 const NAV = [
   { label: "HOME", page: "home" },
   { label: "PRODUTOS", page: "products" },
-  { label: "PROJETOS PERSONALIZADOS", page: "custom" },
   { label: "LICITAÇÕES", page: "licitacoes" },
-  { label: "SOBRE NÓS", page: "about" },
   { label: "CONTATO", page: "contact" },
 ];
 
@@ -60,25 +58,29 @@ export function Header({ onNavigate, currentPage }: HeaderProps) {
         </button>
 
         {/* Desktop nav */}
-        <nav className="hidden lg:flex items-center gap-8 flex-1">
+        <nav className="hidden lg:flex items-center gap-10 xl:gap-12 flex-1">
           {NAV.map(item => (
             <button
               key={item.page}
               onClick={() => onNavigate(item.page)}
-              className="relative text-sm font-bold tracking-wide whitespace-nowrap transition-colors duration-150 py-1 group"
+              className="relative font-bold tracking-wide whitespace-nowrap transition-colors duration-150 py-1 group"
               style={{
                 fontFamily: "'Barlow Condensed', sans-serif",
-                fontSize: 15,
+                fontSize: 17,
                 fontWeight: 700,
                 letterSpacing: "0.04em",
                 color: currentPage === item.page ? "#dc2626" : "#374151",
               }}
             >
               {item.label}
+
               <span
                 className="absolute -bottom-0.5 left-0 h-0.5 bg-[#dc2626] transition-all duration-200"
-                style={{ width: currentPage === item.page ? "100%" : "0%" }}
+                style={{
+                  width: currentPage === item.page ? "100%" : "0%",
+                }}
               />
+
               <span className="absolute -bottom-0.5 left-0 h-0.5 bg-[#dc2626] opacity-0 group-hover:opacity-100 group-hover:w-full transition-all duration-200 w-0" />
             </button>
           ))}

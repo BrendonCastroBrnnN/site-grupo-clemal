@@ -5,7 +5,6 @@ import {
   Shield, Truck, Plus, Minus, Star
 } from "lucide-react";
 const categories: any[] = [];
-const testimonials: any[] = [];
 const clientLogos: any[] = [];
 
 interface HomePageProps {
@@ -101,15 +100,18 @@ export function HomePage({ onNavigate }: HomePageProps) {
     <div className="bg-white" style={{ fontFamily: "'Inter', sans-serif" }}>
 
       {/* ── 1. HERO ── */}
-      <section className="bg-[#fafafa]" style={{ borderBottom: "1px solid #ececec" }}>
-        <div className="max-w-7xl mx-auto px-6 py-16 md:py-24 grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
+      <section
+        className="bg-[#fafafa] min-h-[calc(100vh-88px)] flex items-center"
+        style={{ borderBottom: "1px solid #ececec" }}
+      >
+        <div className="w-full max-w-7xl mx-auto px-6 pt-4 pb-10 md:pt-5 md:pb-12 grid grid-cols-1 md:grid-cols-2 gap-10 items-center">
 
           {/* Left */}
           <div>
 
             <h1 style={{
               fontFamily: "'Barlow Condensed', sans-serif",
-              fontSize: "clamp(36px,4.5vw,62px)",
+              fontSize: "clamp(36px,3.8vw,54px)",
               fontWeight: 900,
               lineHeight: 1.03,
               letterSpacing: "-1px",
@@ -118,12 +120,12 @@ export function HomePage({ onNavigate }: HomePageProps) {
               Há mais de 26 anos fabricando soluções profissionais para empresas de todo o Brasil.
             </h1>
 
-            <p className="mt-5 text-gray-500 text-lg leading-relaxed mb-8 max-w-lg">
+            <p className="mt-4 text-gray-500 text-lg leading-relaxed mb-6 max-w-lg">
               EPIs, bolsas, malotes, capas e produtos personalizados com qualidade industrial e durabilidade comprovada para empresas privadas e órgãos públicos.
             </p>
 
             {/* Bullets */}
-            <div className="grid grid-cols-2 gap-2.5 mb-9">
+            <div className="grid grid-cols-2 gap-2.5 mb-6">
               {[
                 "Produção própria", "Projetos personalizados",
                 "Alta durabilidade", "Qualidade industrial",
@@ -451,7 +453,6 @@ export function HomePage({ onNavigate }: HomePageProps) {
       <section className="py-20">
         <div className="max-w-7xl mx-auto px-6">
           <SectionHeading
-            eyebrow="Projetos realizados"
             title="Cases de Sucesso"
             subtitle="Projetos desenvolvidos para grandes empresas e órgãos públicos em todo o Brasil."
             center
@@ -472,7 +473,7 @@ export function HomePage({ onNavigate }: HomePageProps) {
               },
               {
                 company: "Cemig Distribuição",
-                project: "Capas protetoras para coletores de dados das equipes de campo",
+                project: "Capa para coletor de dados e impressoras de todas as marcas",
                 image: "https://images.unsplash.com/photo-1563770660941-20978e870e26?w=600&h=400&fit=crop&auto=format",
                 tag: "Capas para Coletores",
               },
@@ -501,97 +502,8 @@ export function HomePage({ onNavigate }: HomePageProps) {
               onClick={() => onNavigate("custom")}
               className="inline-flex items-center gap-2 border border-gray-200 hover:border-gray-400 text-gray-700 font-semibold px-7 py-3 rounded-xl transition-colors duration-200 text-sm"
             >
-              Ver todos os projetos <ArrowRight className="w-4 h-4" />
+              Crie seu projeto <ArrowRight className="w-4 h-4" />
             </button>
-          </div>
-        </div>
-      </section>
-
-      {/* ── 9. DEPOIMENTOS ── */}
-      <section className="py-20 bg-[#fafafa]" style={{ borderTop: "1px solid #ececec", borderBottom: "1px solid #ececec" }}>
-        <div className="max-w-7xl mx-auto px-6">
-          <SectionHeading eyebrow="O que dizem nossos clientes" title="Depoimentos" center />
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5">
-            {testimonials.map(t => (
-              <div
-                key={t.id}
-                className="bg-white rounded-2xl p-6 border border-gray-100 hover:shadow-lg transition-all duration-300"
-              >
-                <div className="flex gap-0.5 mb-4">
-                  {[1, 2, 3, 4, 5].map(s => (
-                    <Star key={s} className="w-4 h-4 text-amber-400 fill-amber-400" />
-                  ))}
-                </div>
-                <p className="text-gray-600 text-sm leading-relaxed mb-5 italic">"{t.text}"</p>
-                <div className="flex items-center gap-3 pt-4 border-t border-gray-50">
-                  <img src={t.avatar} alt={t.name} className="w-10 h-10 rounded-full object-cover bg-gray-100" />
-                  <div>
-                    <p className="text-sm font-semibold text-gray-900">{t.name}</p>
-                    <p className="text-xs text-[#dc2626]">{t.company}</p>
-                  </div>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* ── 10. LICITAÇÕES TEASER ── */}
-      <section className="py-20">
-        <div className="max-w-7xl mx-auto px-6">
-          <div className="bg-[#fafafa] rounded-3xl border border-gray-100 p-10 md:p-14 grid grid-cols-1 md:grid-cols-2 gap-10 items-center">
-            <div>
-              <p className="text-xs font-semibold tracking-[0.18em] uppercase text-[#dc2626] mb-4">
-                Setor público
-              </p>
-              <h2 style={{
-                fontFamily: "'Barlow Condensed', sans-serif",
-                fontSize: "clamp(28px,3vw,44px)",
-                fontWeight: 900,
-                lineHeight: 1.05,
-                color: "#111111",
-                letterSpacing: "-0.5px",
-              }}>
-                Fornecemos para órgãos públicos e participamos de licitações em todo o Brasil
-              </h2>
-              <p className="mt-4 text-gray-500 leading-relaxed mb-7">
-                Estrutura homologada, nota fiscal eletrônica, capacidade produtiva comprovada e histórico de fornecimento para prefeituras, autarquias e empresas estatais.
-              </p>
-              <div className="flex flex-wrap gap-3">
-                <button
-                  onClick={() => onNavigate("licitacoes")}
-                  className="flex items-center gap-2 bg-[#111111] hover:bg-[#dc2626] text-white font-bold px-7 py-3.5 rounded-xl transition-colors duration-200"
-                  style={{ fontFamily: "'Barlow Condensed', sans-serif", fontSize: 15, letterSpacing: "0.05em" }}
-                >
-                  PARTICIPAR DE UMA COTAÇÃO
-                </button>
-                <a
-                  href="https://wa.me/5531993270281?text=Olá! Gostaria de informações sobre fornecimento para licitação."
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="flex items-center gap-2 border border-gray-200 hover:border-gray-400 text-gray-700 font-semibold px-7 py-3.5 rounded-xl transition-colors duration-200"
-                  style={{ fontFamily: "'Inter', sans-serif", fontSize: 14 }}
-                >
-                  <MessageCircle className="w-4 h-4 text-emerald-500" />
-                  Falar com especialista
-                </a>
-              </div>
-            </div>
-            <div className="grid grid-cols-2 gap-3">
-              {[
-                { value: "+1.200", label: "Licitações atendidas" },
-                { value: "27", label: "Estados cobertos" },
-                { value: "100%", label: "NF-e emitida" },
-                { value: "+26", label: "Anos de mercado" },
-              ].map(({ value, label }) => (
-                <div key={label} className="bg-white rounded-2xl p-5 border border-gray-100 text-center">
-                  <p style={{ fontFamily: "'Barlow Condensed', sans-serif", fontSize: 34, fontWeight: 900, color: "#111111", letterSpacing: "-0.5px", lineHeight: 1 }}>
-                    {value}
-                  </p>
-                  <p className="text-xs text-gray-500 mt-1">{label}</p>
-                </div>
-              ))}
-            </div>
           </div>
         </div>
       </section>
