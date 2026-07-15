@@ -1,4 +1,5 @@
-import { MessageCircle, CheckCircle, Award, FileText, Package, Users, Factory, Truck, Shield, Building2, ArrowRight } from "lucide-react";
+import { CheckCircle, Award, FileText, Package, Users, Factory, Truck, Shield, Building2, ArrowRight } from "lucide-react";
+import { WhatsAppIcon } from "../components/WhatsAppIcon";
 
 interface LicitacoesPageProps {
   onNavigate: (page: string) => void;
@@ -333,7 +334,7 @@ export function LicitacoesPage({ onNavigate }: LicitacoesPageProps) {
               className="flex items-center gap-2 bg-emerald-500 hover:bg-emerald-600 text-white font-bold px-8 py-4 rounded-xl transition-colors duration-200"
               style={{ fontFamily: "'Barlow Condensed', sans-serif", fontSize: 15, letterSpacing: "0.05em" }}
             >
-              <MessageCircle className="w-5 h-5" />
+              <WhatsAppIcon className="w-5 h-5" />
               FALAR NO WHATSAPP
             </a>
             <a

@@ -9,7 +9,7 @@ import { ContactPage } from "./pages/ContactPage";
 import { AboutPage } from "./pages/AboutPage";
 import { CustomPage } from "./pages/CustomPage";
 import { LicitacoesPage } from "./pages/LicitacoesPage";
-import { MessageCircle } from "lucide-react";
+import { WhatsAppIcon } from "./components/WhatsAppIcon";
 import { AdminPage } from "./pages/AdminPage";
 
 interface NavState {
@@ -114,7 +114,7 @@ export default function App() {
           fontFamily: "'Inter', sans-serif",
         }}
       >
-        <MessageCircle className="w-5 h-5 flex-shrink-0" />
+        <WhatsAppIcon className="w-5 h-5 flex-shrink-0" />
 
         <span
           className="text-sm font-semibold overflow-hidden whitespace-nowrap transition-all duration-300"

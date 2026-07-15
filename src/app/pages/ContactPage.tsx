@@ -3,12 +3,12 @@ import {
   Clock,
   Mail,
   MapPin,
-  MessageCircle,
   Phone,
   Send,
 } from "lucide-react";
 import { useState } from "react";
 import { createInquiry } from "../services/inquiriesService";
+import { WhatsAppIcon } from "../components/WhatsAppIcon";
 
 const initialForm = {
   name: "",
@@ -104,7 +104,7 @@ export function ContactPage() {
                 color: "text-[#111111]",
               },
               {
-                icon: MessageCircle,
+                icon: WhatsAppIcon,
                 title: "WhatsApp",
                 lines: ["(31) 99327-0281", "Atendimento rápido!"],
                 href: "https://wa.me/5531993270281",
@@ -295,7 +295,7 @@ export function ContactPage() {
                     rel="noopener noreferrer"
                     className="flex items-center justify-center gap-2 bg-green-500 hover:bg-green-600 text-white font-bold px-5 py-3 rounded-md transition-colors"
                   >
-                    <MessageCircle className="w-5 h-5" />
+                    <WhatsAppIcon className="w-5 h-5" />
                     WhatsApp
                   </a>
                 </div>

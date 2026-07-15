@@ -1,9 +1,11 @@
 import { useState } from "react";
 import {
-  MessageCircle, ArrowRight, Award, CheckCircle,
+  ArrowRight, Award, CheckCircle,
   Package, Users, Factory, Layers, Wrench, Zap,
   Shield, Truck, Plus, Minus, Star
 } from "lucide-react";
+import { WhatsAppIcon } from "../components/WhatsAppIcon";
+
 const categories: any[] = [];
 const clientLogos: any[] = [];
 
@@ -154,7 +156,7 @@ export function HomePage({ onNavigate }: HomePageProps) {
                 className="flex items-center gap-2 bg-[#dc2626] hover:bg-[#b91c1c] text-white font-bold px-7 py-3.5 rounded-xl transition-colors duration-200 shadow-md"
                 style={{ fontFamily: "'Barlow Condensed', sans-serif", fontSize: 15, letterSpacing: "0.05em" }}
               >
-                <MessageCircle className="w-5 h-5" />
+                <WhatsAppIcon className="w-5 h-5" />
                 SOLICITAR ORÇAMENTO
               </a>
             </div>
@@ -180,7 +182,7 @@ export function HomePage({ onNavigate }: HomePageProps) {
                 </div>
                 <div className="rounded-2xl overflow-hidden flex-1">
                   <img
-                    src="https://images.unsplash.com/photo-1590664216379-9af6f139e66e?w=500&h=220&fit=crop&auto=format"
+                    src="https://images.unsplash.com/photo-1620471499743-fedf03f86ef7?w=500&h=220&fit=crop&auto=format"
                     alt="Malotes Grupo Clemal"
                     className="w-full h-full object-cover"
                   />
@@ -399,7 +401,7 @@ export function HomePage({ onNavigate }: HomePageProps) {
                     className="flex items-center gap-2 border border-white/20 hover:border-white/40 text-white font-semibold px-7 py-3.5 rounded-xl transition-colors duration-200"
                     style={{ fontFamily: "'Inter', sans-serif", fontSize: 14 }}
                   >
-                    <MessageCircle className="w-5 h-5 text-emerald-400" />
+                    <WhatsAppIcon className="w-5 h-5 text-emerald-400" />
                     Falar no WhatsApp
                   </a>
                 </div>
@@ -527,7 +529,7 @@ export function HomePage({ onNavigate }: HomePageProps) {
               className="inline-flex items-center gap-2 bg-emerald-500 hover:bg-emerald-600 text-white font-bold px-7 py-3.5 rounded-xl transition-colors duration-200 mt-7 self-start"
               style={{ fontFamily: "'Barlow Condensed', sans-serif", fontSize: 15, letterSpacing: "0.04em" }}
             >
-              <MessageCircle className="w-5 h-5" />
+              <WhatsAppIcon className="w-5 h-5" />
               FALE COM UM ESPECIALISTA
             </a>
           </div>

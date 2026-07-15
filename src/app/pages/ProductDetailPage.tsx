@@ -1,7 +1,6 @@
 import {
   ArrowLeft,
   CheckCircle,
-  MessageCircle,
   PackageOpen,
 } from "lucide-react";
 import { useEffect, useState } from "react";
@@ -11,6 +10,7 @@ import {
   getRelatedProducts,
 } from "../services/productsService";
 import type { Product } from "../types/product";
+import { WhatsAppIcon } from "../components/WhatsAppIcon";
 
 interface ProductDetailProps {
   slug: string;
@@ -319,7 +319,7 @@ export function ProductDetailPage({
                   letterSpacing: "0.04em",
                 }}
               >
-                <MessageCircle className="w-5 h-5" />
+                <WhatsAppIcon className="w-5 h-5" />
                 SOLICITAR ORÇAMENTO
               </a>
             </div>

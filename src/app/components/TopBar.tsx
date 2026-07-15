@@ -1,4 +1,5 @@
-import { Phone, Mail, MessageCircle, MapPin } from "lucide-react";
+import { Phone, Mail, MapPin } from "lucide-react";
+import { WhatsAppIcon } from "./WhatsAppIcon";
 
 export function TopBar() {
   return (
@@ -28,7 +29,7 @@ export function TopBar() {
             className="flex items-center gap-1.5 text-emerald-400 hover:text-emerald-300 transition-colors duration-200"
             style={{ fontFamily: "'Inter', sans-serif" }}
           >
-            <MessageCircle className="w-3 h-3" />
+            <WhatsAppIcon className="w-3 h-3" />
             (31) 99327-0281
           </a>
         </div>

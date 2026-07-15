@@ -9,6 +9,7 @@ import {
 } from "lucide-react";
 import { useState } from "react";
 import { createInquiry } from "../services/inquiriesService";
+import { WhatsAppIcon } from "../components/WhatsAppIcon";
 
 const initialForm = {
   company: "",
@@ -421,7 +422,7 @@ export function CustomPage() {
                       rel="noopener noreferrer"
                       className="flex items-center justify-center gap-2 bg-green-500 hover:bg-green-600 text-white font-bold px-4 py-3 rounded-md transition-colors"
                     >
-                      <MessageCircle className="w-5 h-5" />
+                      <WhatsAppIcon className="w-5 h-5" />
                       WhatsApp
                     </a>
                   </div>

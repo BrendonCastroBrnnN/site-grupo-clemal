@@ -1,4 +1,5 @@
-import { Phone, Mail, MessageCircle, MapPin, Instagram, Youtube } from "lucide-react";
+import { Phone, Mail, MapPin, Instagram, Youtube } from "lucide-react";
+import { WhatsAppIcon } from "./WhatsAppIcon";
 
 interface FooterProps {
   onNavigate: (page: string) => void;
@@ -14,12 +15,18 @@ export function Footer({ onNavigate }: FooterProps) {
           {/* Brand — spans 2 */}
           <div className="lg:col-span-2">
             <div className="flex flex-col leading-[1] gap-[2px] mb-5">
-              <span style={{ fontFamily: "'Barlow Condensed', sans-serif", fontSize: 22, fontWeight: 900, color: "#ffffff", letterSpacing: "-0.2px" }}>
-                GRUPO
-              </span>
-              <span style={{ fontFamily: "'Barlow Condensed', sans-serif", fontSize: 22, fontWeight: 900, color: "#dc2626", letterSpacing: "-0.2px" }}>
-                CLEMAL
-              </span>
+              <button
+                type="button"
+                onClick={() => onNavigate("home")}
+                className="inline-flex"
+                aria-label="Ir para a página inicial"
+              >
+                <img
+                  src="/logo-grupo-clemal-branca.png"
+                  alt="Grupo Clemal"
+                  className="h-36 w-auto object-contain"
+                />
+              </button>
             </div>
             <p className="text-gray-400 text-sm leading-relaxed max-w-xs mb-6" style={{ fontFamily: "'Inter', sans-serif" }}>
               Há mais de 26 anos fabricando bolsas, malotes, capas protetoras e EPIs com qualidade industrial para empresas e órgãos públicos em todo o Brasil.
@@ -34,7 +41,7 @@ export function Footer({ onNavigate }: FooterProps) {
                   label: "Instagram",
                 },
                 {
-                  icon: MessageCircle,
+                  icon: WhatsAppIcon,
                   href: "https://wa.me/5531993270281",
                   label: "WhatsApp",
                   green: true,
@@ -107,7 +114,6 @@ export function Footer({ onNavigate }: FooterProps) {
                 "Malotes",
                 "Capas para Coletores",
                 "Bainhas para Ferramentas",
-                "Projetos Personalizados",
               ].map(item => (
                 <li key={item}>
                   <button
@@ -154,7 +160,7 @@ export function Footer({ onNavigate }: FooterProps) {
                 className="flex items-center gap-3 text-sm text-emerald-400 hover:text-emerald-300 transition-colors duration-150"
                 style={{ fontFamily: "'Inter', sans-serif" }}
               >
-                <MessageCircle className="w-4 h-4 flex-shrink-0" />
+                <WhatsAppIcon className="w-4 h-4 flex-shrink-0" />
                 (31) 99327-0281
               </a>
               <a
@@ -175,9 +181,6 @@ export function Footer({ onNavigate }: FooterProps) {
         <div className="max-w-7xl mx-auto px-6 py-5 flex flex-col sm:flex-row items-center justify-between gap-2">
           <p className="text-xs text-gray-600" style={{ fontFamily: "'Inter', sans-serif" }}>
             © {new Date().getFullYear()} Grupo Clemal Ind. e Com. Ltda. Todos os direitos reservados.
-          </p>
-          <p className="text-xs text-gray-700" style={{ fontFamily: "'Inter', sans-serif" }}>
-            Contagem · Minas Gerais · Brasil
           </p>
         </div>
       </div>

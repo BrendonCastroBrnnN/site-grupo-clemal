@@ -1,4 +1,5 @@
-import { Award, Users, Wrench, Truck, CheckCircle, MessageCircle } from "lucide-react";
+import { Award, Users, Wrench, Truck, CheckCircle} from "lucide-react";
+import { WhatsAppIcon } from "../components/WhatsAppIcon";
 
 export function AboutPage() {
   return (
@@ -128,7 +129,7 @@ export function AboutPage() {
             target="_blank" rel="noopener noreferrer"
             className="inline-flex items-center gap-2 bg-green-500 hover:bg-green-600 text-white font-black px-8 py-3.5 rounded-lg transition-colors"
           >
-            <MessageCircle className="w-5 h-5" />
+            <WhatsAppIcon className="w-5 h-5" />
             Falar com Nossa Equipe
           </a>
         </div>

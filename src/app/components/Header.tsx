@@ -39,22 +39,11 @@ export function Header({ onNavigate, currentPage }: HeaderProps) {
           onClick={() => { onNavigate("home"); setMobileOpen(false); }}
           className="flex-shrink-0 select-none"
         >
-          <div className="flex flex-col leading-[1] gap-[1px]">
-            <span style={{
-              fontFamily: "'Barlow Condensed', sans-serif",
-              fontSize: 21,
-              fontWeight: 900,
-              color: "#111111",
-              letterSpacing: "-0.2px",
-            }}>GRUPO</span>
-            <span style={{
-              fontFamily: "'Barlow Condensed', sans-serif",
-              fontSize: 21,
-              fontWeight: 900,
-              color: "#dc2626",
-              letterSpacing: "-0.2px",
-            }}>CLEMAL</span>
-          </div>
+          <img
+            src="/logo-grupo-clemal.png"
+            alt="Grupo Clemal"
+            className="h-30 w-auto object-contain"
+          />
         </button>
 
         {/* Desktop nav */}
