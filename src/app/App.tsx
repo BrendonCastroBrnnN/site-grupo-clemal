@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { TopBar } from "./components/TopBar";
 import { Header } from "./components/Header";
 import { Footer } from "./components/Footer";
@@ -17,13 +17,42 @@ interface NavState {
   params?: Record<string, string>;
 }
 
+function getInitialNav(): NavState {
+  const pathname = window.location.pathname;
+
+  if (pathname === "/admin") {
+    return { page: "admin" };
+  }
+
+  return { page: "home" };
+}
+
 export default function App() {
-  const [nav, setNav] = useState<NavState>({ page: "home" });
+  const [nav, setNav] = useState<NavState>(getInitialNav);
+
+  useEffect(() => {
+    function handlePopState() {
+      setNav(getInitialNav());
+    }
+
+    window.addEventListener("popstate", handlePopState);
+
+    return () => {
+      window.removeEventListener("popstate", handlePopState);
+    };
+  }, []);
 
   const navigate = (page: string, params?: Record<string, string>) => {
-    setNav({ page, params });
-    window.scrollTo({ top: 0, behavior: "smooth" });
-  };
+  setNav({ page, params });
+
+  const pathname = page === "admin" ? "/admin" : "/";
+
+  if (window.location.pathname !== pathname) {
+    window.history.pushState({}, "", pathname);
+  }
+
+  window.scrollTo({ top: 0, behavior: "smooth" });
+};
 
   const renderPage = () => {
     switch (nav.page) {
