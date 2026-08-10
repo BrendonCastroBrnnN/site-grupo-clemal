@@ -177,13 +177,32 @@ export function Footer({ onNavigate }: FooterProps) {
       </div>
 
       {/* Bottom bar */}
-      <div style={{ borderTop: "1px solid rgba(255,255,255,0.06)" }}>
-        <div className="max-w-7xl mx-auto px-6 py-5 flex flex-col sm:flex-row items-center justify-between gap-2">
-          <p className="text-xs text-gray-600" style={{ fontFamily: "'Inter', sans-serif" }}>
-            © {new Date().getFullYear()} Grupo Clemal Ind. e Com. Ltda. Todos os direitos reservados.
-          </p>
-        </div>
-      </div>
+      {/* Bottom bar */}
+<div style={{ borderTop: "1px solid rgba(255,255,255,0.06)" }}>
+  <div className="max-w-7xl mx-auto px-6 py-5 flex flex-col sm:flex-row items-center justify-between gap-2">
+    <p
+      className="text-xs text-gray-600"
+      style={{ fontFamily: "'Inter', sans-serif" }}
+    >
+      © {new Date().getFullYear()} Grupo Clemal Ind. e Com. Ltda. Todos os direitos reservados.
+    </p>
+
+    <p
+      className="text-xs text-gray-600"
+      style={{ fontFamily: "'Inter', sans-serif" }}
+    >
+      Desenvolvido pela{" "}
+      <a
+        href="https://braviksystems.com.br"
+        target="_blank"
+        rel="noopener noreferrer"
+        className="text-gray-400 hover:text-white font-medium transition-colors duration-150"
+      >
+        Bravik Systems
+      </a>
+    </p>
+  </div>
+</div>
     </footer>
   );
 }
